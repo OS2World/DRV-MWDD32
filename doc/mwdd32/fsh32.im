@@ -1,0 +1,374 @@
+.*
+.* $Header: d:\\32bits\\ext2-os2\\doc\\mwdd32\\rcs\\fsh32.im,v 1.4 1997/03/15 17:13:14 Willm Exp $
+.*
+
+.* 32 bits OS/2 device driver and IFS support. Provides 32 bits kernel 
+.* services (DevHelp) and utility functions to 32 bits OS/2 ring 0 code 
+.* (device drivers and installable file system drivers).
+.* Copyright (C) 1995, 1996, 1997  Matthieu WILLM (willm@ibm.net)
+.*
+.* This program is free software; you can redistribute it and/or modify
+.* it under the terms of the GNU General Public License as published by
+.* the Free Software Foundation; either version 2 of the License, or
+.* (at your option) any later version.
+.*
+.* This program is distributed in the hope that it will be useful,
+.* but WITHOUT ANY WARRANTY; without even the implied warranty of
+.* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.* GNU General Public License for more details.
+.*
+.* You should have received a copy of the GNU General Public License
+.* along with this program; if not, write to the Free Software
+.* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+
+
+.nameit symbol=titre_1000 text='The FSH32 interface'
+.nameit symbol=titre_1001 text='fsh32_dovolio'
+.nameit symbol=titre_1002 text='fsh32_segalloc'
+.nameit symbol=titre_1003 text='fsh32_findduphvpb'
+.nameit symbol=titre_1004 text='fsh32_forcenoswap'
+.nameit symbol=titre_1005 text='fsh32_getvolparm'
+.nameit symbol=titre_1006 text='fsh32_addshare'
+.nameit symbol=titre_1007 text='fsh32_removeshare'
+.nameit symbol=titre_1008 text='fsh32_setvolume'
+
+:h1.&titre_1000.
+
+This chapter describes the 32 bits FSHelp interfaces provided by fsh32.lib.
+To use them from C code, you must include the following files &colon.
+:ul compact.
+:li.os2/types.h
+:li.os2/devhlp32.h
+:li.os2/fsh32.h
+:eul.
+
+:p.
+This document is only intented to describe the 32 bits version of the FSHelp calls,
+it does NOT replace the :hp1.Installable File Systems for OS/2 version 3:ehp1. document. Please refer
+to that document for a more complete description of the FSHelp calls.
+
+:nt.
+:ul compact.
+:li.Unless otherwise specified, ALL pointers are 32 bits FLAT pointers.
+:li.Unless ohterwise specified, ALL fsh32 routines follow the 32 bits SYSTEM calling convention (parameters pushed from right to left, caller cleans up the stack, EBP ESI EDI EBX and all segment registers are preserved, other are not)
+:eul.
+:ent.
+
+:p.
+List of fsh32 routines &colon.
+:ul compact.
+:li.:link reftype=hd refid=1001.&titre_1001.:elink.
+:li.:link reftype=hd refid=1002.&titre_1002.:elink.
+:li.:link reftype=hd refid=1003.&titre_1003.:elink.
+:li.:link reftype=hd refid=1004.&titre_1004.:elink.
+:li.:link reftype=hd refid=1005.&titre_1005.:elink.
+:li.:link reftype=hd refid=1006.&titre_1006.:elink.
+:li.:link reftype=hd refid=1007.&titre_1007.:elink.
+:li.:link reftype=hd refid=1008.&titre_1008.:elink.
+:eul.
+
+.*******************************************************************************
+.*** fsh32_dovolio                                                           ***
+.*******************************************************************************
+
+:h2 id=1001.&titre_1001.
+
+:p.
+Issues a sector based I/O operation.
+
+:xmp.
+int FSH32ENTRY fsh32_dovolio(
+                   int operation,               /* ebp + 8  */
+                   int fAllowed,                /* ebp + 12 */
+                   int hVPB,                    /* ebp + 16 */
+                   void *pData,                 /* ebp + 20 */
+                   unsigned long *pcSec,        /* ebp + 24 */
+                   unsigned long  iSec          /* ebp + 28 */
+                  );
+:exmp.
+
+
+:p.Parameters description &colon.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.int operation
+:c.input
+:c.type of I/O (cf Installable File Systems for OS/2 version 3).
+:row.
+:c.int fAllowed
+:c.input
+:c.Allowed actions the kernel can take in case of hard error.
+:row.
+:c.int hVPB
+:c.input
+:c.Volume Parameter Block handle.
+:row.
+:c.void *pData
+:c.in/out
+:c.Transfert address.
+:row.
+:c.unsigned long *pcSec
+:c.in/out
+:c.Pointer to a double word containing the number of sectors to transfer.
+:row.
+:c.int iSec
+:c.input
+:c.Sector number of first sector to transfer.
+:etable.
+
+
+.*******************************************************************************
+.*** fsh32_segalloc                                                          ***
+.*******************************************************************************
+
+:h2 id=1002.&titre_1002.
+
+:p.
+Allocates a 16 bits segment.
+
+:xmp.
+int FSH32ENTRY fsh32_segalloc(
+                              int flags,                /* ebp + 8  */
+                              int length,               /* ebp + 12 */
+                              unsigned short *pSel      /* ebp + 16 */
+                             );
+:exmp.
+
+
+:p.Parameters description &colon.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.int flags
+:c.input
+:c.Allocation flags (cf Installable File Systems for OS/2 version 3).
+:row.
+:c.int length
+:c.input
+:c.Length of segment to be allocated.
+:row.
+:c.unsigned short *pSel
+:c.in/out
+:c.Pointer to a word where will be stored the segment selector.
+:etable.
+
+
+.*******************************************************************************
+.*** fsh32_findduphvpb                                                       ***
+.*******************************************************************************
+
+:h2 id=1003.&titre_1003.
+
+:p.
+Looks for a duplicate volume parameter block of the current volume parameter block.
+
+:xmp.
+ int FSH32ENTRY fsh32_findduphvpb(
+                                 unsigned short hVPB,         /* ebp + 8  */
+                                 unsigned short *phVPB        /* ebp + 12 */
+                                );
+:exmp.
+
+
+:p.Parameters description &colon.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.unsigned short hVPB
+:c.input
+:c.Volume parameter block handle.
+:row.
+:c.unsigned short *phVPB
+:c.in/out
+:c.Pointer ot a word where will be stored the duplicate hVPB, if any.
+:etable.
+
+
+.*******************************************************************************
+.*** fsh32_forcenoswap                                                       ***
+.*******************************************************************************
+
+:h2 id=1004.&titre_1004.
+
+:p.
+Permanently locks a 16 bits segment of the IFS load image into physical memory.
+
+:nt.the linkage convention is FSHENTRY2 (Visualage C++ _Optlink).
+:ent.
+
+
+:xmp.
+int FSH32ENTRY2 fsh32_forcenoswap(
+                                  unsigned short selector
+                                 );
+:exmp.
+
+
+:p.Parameters description &colon.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.unsigned short selector
+:c.input
+:c.selector of the 16 bits segment to lock.
+:etable.
+
+.*******************************************************************************
+.*** fsh32_getvolparm                                                        ***
+.*******************************************************************************
+
+:h2 id=1005.&titre_1005.
+
+:p.
+Retrieves the volume parameter block (vpfsi and vpfsd) from a volume parameter
+block handle (hVPB).
+
+:xmp.
+int FSH32ENTRY fsh32_getvolparm(
+                                unsigned short  hVPB,
+                                PTR16          *ppvpfsi,
+                                PTR16          *ppvpfsd
+                               );
+:exmp.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.unsigned short hVPB
+:c.input
+:c.handle of volume parameter block
+:row.
+:c.PTR16 *ppvpfsi
+:c.in/out
+:c.FLAT pointer to a double word where the kernel will store the 16&colon.16 pointer to
+the vpfsi
+:row.
+:c.PTR16 *ppvpfsd
+:c.in/out
+:c.FLAT pointer to a double word where the kernel will store the 16&colon.16 pointer to
+the vpfsd
+:etable.
+
+
+.*******************************************************************************
+.*** fsh32_addshare                                                          ***
+.*******************************************************************************
+
+:h2 id=1006.&titre_1006.
+
+:p.
+Adds a name to the sharing set.
+
+:xmp.
+extern int FSH32ENTRY fsh32_addshare(
+                                     PTR16           pName,
+                                     unsigned short  mode,
+                                     unsigned short  hVPB,
+                                     unsigned long  *phShare
+                                    );
+:exmp.
+
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.PTR16 pName
+:c.input
+:c.16&colon.16 pointer to the name to be added.
+:row.
+:c.unsigned short mode
+:c.input
+:c.Requested sharing mode (OPEN_SHARE_*) and access mode (OPEN_ACCESS_*).
+:row.
+:c.unsigned long *phShare
+:c.in/out
+:c.Pointer to a double word where the kernel will store the share handle.
+:etable.
+
+.*******************************************************************************
+.*** fsh32_removeshare                                                       ***
+.*******************************************************************************
+
+:h2 id=1007.&titre_1007.
+
+:p.
+Removes a name from the sharing set.
+
+:nt.the linkage convention is FSHENTRY2 (Visualage C++ _Optlink).
+:ent.
+
+:xmp.
+extern void FSH32ENTRY2 fsh32_removeshare(
+                                          unsigned long hShare /* eax*/
+                                         );
+:exmp.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.unsigned long hShare
+:c.input
+:c.Share handle (returned by fsh32_addshare).
+:etable.
+
+
+.*******************************************************************************
+.*** fsh32_setvolume                                                         ***
+.*******************************************************************************
+
+:h2 id=1008.&titre_1008.
+
+:p.
+Forces a specified volume to be mounted on its drive.
+
+:nt.the linkage convention is FSHENTRY2 (Visualage C++ _Optlink).
+:ent.
+
+:xmp.
+extern int FSH32ENTRY2 fsh32_setvolume(
+                                       unsigned short hVPB,     /*  ax */
+                                       unsigned long  fControl  /* edx */
+                                      );
+:exmp.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.unsigned short hVPB
+:c.input
+:c.Volume parameter block handle of volume.
+:row.
+:c.unsigned long fControl
+:c.input
+:c.hard error daemon popup flag.
+:etable.

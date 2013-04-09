@@ -1,0 +1,176 @@
+.*
+.* $Header: d:\\32bits\\ext2-os2\\doc\\mwdd32\\rcs\\samples.im,v 1.4 1997/03/15 17:13:14 Willm Exp $
+.*
+
+.* 32 bits OS/2 device driver and IFS support. Provides 32 bits kernel 
+.* services (DevHelp) and utility functions to 32 bits OS/2 ring 0 code 
+.* (device drivers and installable file system drivers).
+.* Copyright (C) 1995, 1996, 1997  Matthieu WILLM (willm@ibm.net)
+.*
+.* This program is free software; you can redistribute it and/or modify
+.* it under the terms of the GNU General Public License as published by
+.* the Free Software Foundation; either version 2 of the License, or
+.* (at your option) any later version.
+.*
+.* This program is distributed in the hope that it will be useful,
+.* but WITHOUT ANY WARRANTY; without even the implied warranty of
+.* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.* GNU General Public License for more details.
+.*
+.* You should have received a copy of the GNU General Public License
+.* along with this program; if not, write to the Free Software
+.* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+.nameit symbol=titre_700 text='Sample 32 bits device drivers'
+.nameit symbol=titre_701 text='32 bits regular (DEVICE) device driver'
+.nameit symbol=titre_702 text='32 bits base (BASEDEV) device driver'
+.nameit symbol=titre_703 text='32 bits Installable File System (IFS) driver'
+.nameit symbol=titre_704 text='32 bits OS/2 Security Enabling Services (SES) driver'
+
+.*******************************************************************************
+.*** VI- Sample 32 bits device drivers                                      ***
+.*******************************************************************************
+:h1 id=700.&titre_700.
+
+:p.
+This chapter describes the sample device drivers included in this package.
+
+:ol compact.
+:li.:link reftype=hd refid=701.&titre_701.:elink.
+:li.:link reftype=hd refid=702.&titre_702.:elink.
+:li.:link reftype=hd refid=703.&titre_703.:elink.
+:li.:link reftype=hd refid=704.&titre_704.:elink.
+:eol.
+
+:nt.
+The 32 bits version of my Linux ext2fs IFS is now available and is a good example of
+a full featured 32 bits IFS, which uses mwdd32.sys services. It can be found at &colon.
+:sl compact.
+:li.ftp&colon.//ftp.leo.org/pub/comp/os/os2/drivers/ifs/ext2_200.zip
+:li.ftp&colon.//sunsite.unc.edu/pub/Linux/system/Filesystems/ext2/ext2_200.zip
+:esl.
+:ent.
+
+.*******************************************************************************
+.*** regular (DEVICE) device driver                                         ***
+.*******************************************************************************
+:h2 id=701.&titre_701.
+
+:h4.Location&colon.
+:xmp.
+&dot./32bits/ext2-os2/skeleton/device
+:exmp.
+
+:h4.Device driver initialization&colon.
+:p.
+Regular device drivers initialize at ring 3. Because at this time the FLAT code segment
+is unreachable (ring 0), the driver cannot do a far call to its 32 bits initialization routine.
+To achieve 32 bits initialization, a small 16 bits routine called at INIT time does the following&colon.
+:ol compact.
+:li.Opens the mwdd32$ device (mwdd32.sys)
+:li.Sends IOCTL category 0xF0 function 0x42 to mwdd32$, with the following parameters &colon.
+:sl compact.
+:li.the FLAT pointer to the kernel's TKSSBase pointer.
+:li.the FLAT pointer to a DevHelp32 structure
+:li.the FLAT pointer to the 32 bits INIT routine
+:li.the 16&colon.16 pointer to the INIT request packet.
+:esl.
+:li.mwdd32$ updates the TKSSBase value, so that our driver can use the :color fc=red bc=default.__StackToFlat():color fc=default bc=default. helper.
+:li.mwdd32$ fills the DevHelp32 structure with pointers to 32 bits DevHelp and utility functions, so that our driver can use them.
+:li.mwdd32$ calls back our 32 bits INIT routine at ring 0.
+:li.Upon return from our 32 bits routine, mwdd32$ stores the return code in the IOCTL data packet.
+:li.Upon return from the IOCTL call, the small 16 bits routine mentionned above retrieves the return code from the IOCTL data packet, and passes it back to the kernel.
+:eol.
+
+.*******************************************************************************
+.*** base (BASEDEV) device driver                                           ***
+.*******************************************************************************
+:h2 id=702.&titre_702.
+
+:p.
+Location&colon.
+:xmp.
+&dot./32bits/ext2-os2/skeleton/basedev
+:exmp.
+
+:h4.Device driver initialization&colon.
+:p.
+Unlike regular device drivers, base device drivers initialize at ring 0. In this case, the 32 bits INIT BASE 
+routine can be called directly. The first think the INIT base does is to call a routine which does the following&colon.
+
+:ol compact.
+:li.Attaches to the mwdd32$ device (mwdd32.sys)
+:li.Calls mwdd32$'s IDC entry point, with the following parameters &colon.
+:sl compact.
+:li.the FLAT pointer to the kernel's TKSSBase pointer.
+:li.the FLAT pointer to a DevHelp32 structure
+:esl.
+:li.mwdd32$ updates the TKSSBase value, so that our driver can use the :color fc=red bc=default.__StackToFlat():color fc=default bc=default. helper.
+:li.mwdd32$ fills the DevHelp32 structure with pointers to 32 bits DevHelp and utility functions, so that our driver can use them.
+:eol.
+
+
+.*******************************************************************************
+.*** Installable File System (IFS) driver                                   ***
+.*******************************************************************************
+:h2 id=703.&titre_703.
+
+:h4.Location&colon.
+:xmp.
+&dot./32bits/ext2-os2/skeleton/ifs
+:exmp.
+
+:h4.IFS initialization&colon.
+:p.
+Installable File System drivers initialize at ring 3. Because at this time the FLAT code segment
+is unreachable (ring 0), the IFS cannot do a far call to its 32 bits initialization routine.
+To achieve 32 bits initialization, a small 16 bits routine called at INIT time does the following&colon.
+:ol compact.
+:li.Opens the mwdd32$ device (mwdd32.sys)
+:li.Sends IOCTL category 0xF0 function 0x41 to mwdd32$, with the following parameters &colon.
+:sl compact.
+:li.the FLAT pointer to the kernel's TKSSBase pointer.
+:li.the FLAT pointer to a DevHelp32 structure
+:li.the FLAT pointer to the 32 bits IFS INIT routine
+:li.the 16&colon.16 pointer to the parameters passed to FS_INIT.
+:esl.
+:li.mwdd32$ updates the TKSSBase value, so that our driver can use the :color fc=red bc=default.__StackToFlat():color fc=default bc=default. helper.
+:li.mwdd32$ fills the DevHelp32 structure with pointers to 32 bits DevHelp and utility functions, so that our driver can use them.
+:li.mwdd32$ converts the 16&colon.16 pointer to FS_INIT parameters to 0&colon.32.
+:li.mwdd32$ calls back our 32 bits IFS INIT routine at ring 0.
+:li.Upon return from our 32 bits routine, mwdd32$ stores the return code in the IOCTL data packet.
+:li.Upon return from the IOCTL call, the small 16 bits routine mentionned above retrieves the return code from the IOCTL data packet, and passes it back to the kernel.
+:eol.
+
+.*******************************************************************************
+.*** OS/2 Security Enabling Services (SES) driver                           ***
+.*******************************************************************************
+:h2 id=704.&titre_704.
+
+
+:h4.Location&colon.
+
+:xmp.
+&dot./32bits/ext2-os2/skeleton/ses
+:exmp.
+
+
+:h4.OS/2 SES driver Initialization&colon.
+
+:p.
+An OS/2 Security device driver is actually a base device driver, so the first part of 
+the initialization phase is similar to a BASEDEV initialization phase.
+
+:p.
+In addition to the BASEDEV initialization phase, an OS/2 security driver must at least
+issue the following&colon.
+:ol compact.
+:li.Call the kernel DevHlp32_Security helper to retrieve 32 bits kernel SecHlp entry points.
+:li.Call the kernel DevHlp32_Security helper to pass to the kernel the addresses of our security callbacks.
+:li.Attach to SES's sesdd32.sys and call its IDC entry point to retrieve 32 bits sesdd32.sys's SecHlp entry points.
+:eol.
+
+:p.
+Once done, in our example, the only non NULL callback is OPEN_PRE. This callback will be called each time a file is opened
+by the kernel (DosOpen) before the actual open operation is done. Our sample checks if the file name matches CONFIG.* and returns
+ERROR_ACCESS_DENIED if it is the case.

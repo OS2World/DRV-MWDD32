@@ -1,0 +1,343 @@
+.*
+.* $Header: d:\\32bits\\ext2-os2\\doc\\mwdd32\\rcs\\utils.im,v 1.4 1997/03/15 17:13:14 Willm Exp $
+.*
+
+.* 32 bits OS/2 device driver and IFS support. Provides 32 bits kernel 
+.* services (DevHelp) and utility functions to 32 bits OS/2 ring 0 code 
+.* (device drivers and installable file system drivers).
+.* Copyright (C) 1995, 1996, 1997  Matthieu WILLM (willm@ibm.net)
+.*
+.* This program is free software; you can redistribute it and/or modify
+.* it under the terms of the GNU General Public License as published by
+.* the Free Software Foundation; either version 2 of the License, or
+.* (at your option) any later version.
+.*
+.* This program is distributed in the hope that it will be useful,
+.* but WITHOUT ANY WARRANTY; without even the implied warranty of
+.* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.* GNU General Public License for more details.
+.*
+.* You should have received a copy of the GNU General Public License
+.* along with this program; if not, write to the Free Software
+.* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+
+
+.nameit symbol=titre_400 text='Kernel utility functions'
+.nameit symbol=titre_401 text='vsprintf'
+.nameit symbol=titre_402 text='strtoul'
+.nameit symbol=titre_403 text='atol'
+.nameit symbol=titre_404 text='strupr'
+.nameit symbol=titre_405 text='strpbrk'
+.nameit symbol=titre_406 text='fnmatch'
+.nameit symbol=titre_407 text='strtol'
+.nameit symbol=titre_408 text='sec32_attach_ses'
+
+:h1.&titre_400.
+
+This chapter describes the 32 bits kernel utility functions provided by mwdd32.sys. These functions include some ansi C and some POSIX useful functions, callable from ring 0 OS/2 kernel code.
+To use them from C code, you must include the following files &colon.
+:ul compact.
+:li.os2/types.h
+:li.os2/devhlp32.h
+:eul.
+
+:p.
+This document is only intented to describe the OS/2 kernel version of these calls,
+it does NOT replace an ANSI C or POSIX programming manual.
+
+:nt.
+:ul compact.
+:li.Unless otherwise specified, ALL pointers are 32 bits FLAT pointers.
+:li.Unless ohterwise specified, ALL utility functions follow the 32 bits SYSTEM calling convention (parameters pushed from right to left, caller cleans up the stack, EBP ESI EDI EBX and all segment registers are preserved, other are not)
+:eul.
+:ent.
+
+:p.
+List of utility functions &colon.
+:ul compact.
+:li.:link reftype=hd refid=401.&titre_401.:elink.
+:li.:link reftype=hd refid=402.&titre_402.:elink.
+:li.:link reftype=hd refid=403.&titre_403.:elink.
+:li.:link reftype=hd refid=404.&titre_404.:elink.
+:li.:link reftype=hd refid=405.&titre_405.:elink.
+:li.:link reftype=hd refid=406.&titre_406.:elink.
+:li.:link reftype=hd refid=407.&titre_407.:elink.
+:li.:link reftype=hd refid=408.&titre_408.:elink.
+:eul.
+
+.*******************************************************************************
+.*** vsprintf                                                                ***
+.*******************************************************************************
+
+:h2 id=401.&titre_401.
+
+:p.
+Issues a formatted output to a buffer.
+
+:xmp.
+int DH32ENTRY vsprintf (
+                        char *buffer,
+                        const char *format,
+                        va_list arg_ptr
+                       );
+:exmp.
+
+
+:p.Parameters description &colon.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.char *buffer
+:c.in/out
+:c.buffer in which will be put the formatted string.
+:row.
+:c.const char *format
+:c.input
+:c.Format string (cf an ANSI C programming manual for a description of its contents)
+:row.
+:c.va_list arg_ptr
+:c.input
+:c.Pointer to a variable size list of arguments
+:etable.
+
+
+.*******************************************************************************
+.*** strtoul                                                                 ***
+.*******************************************************************************
+
+:h2 id=402.&titre_402.
+
+:p.
+Converts a character string to an unsigned long integer.
+
+:xmp.
+unsigned long DH32ENTRY strtoul (
+                                 const char *string, 
+                                 char **end_ptr, 
+                                 int radix
+                                );
+:exmp.
+
+
+:p.Parameters description &colon.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.const char *string
+:c.input
+:c.String to be converted
+:row.
+:c.char **end_ptr
+:c.in/out
+:c.Filled with the pointer to the first character not converted
+:row.
+:c.int radix
+:c.input 
+:c.Base in which the number should be interpreted (auto (0), 8, 10, 16)
+:etable.
+
+
+.*******************************************************************************
+.*** atol                                                                    ***
+.*******************************************************************************
+
+:h2 id=403.&titre_403.
+
+:p.
+Converts the textual representation of a long integer to a long integer.
+
+:xmp.
+long DH32ENTRY atol (const char *string);
+:exmp.
+
+
+:p.Parameters description &colon.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.const char *string
+:c.input
+:c.String to be converted.
+:etable.
+
+
+.*******************************************************************************
+.*** strupr                                                                  ***
+.*******************************************************************************
+
+:h2 id=404.&titre_404.
+
+:p.
+Uppercases a string.
+
+:xmp.
+char *strupr(const char *string);
+:exmp.
+
+
+:p.Parameters description &colon.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.const char *string
+:c.in/out
+:c.On input &colon. string to be uppercased. On ouput &colon. uppercased string.
+:etable.
+
+.*******************************************************************************
+.*** strpbrk                                                                  ***
+.*******************************************************************************
+
+:h2 id=405.&titre_405.
+
+:p.
+Return a pointer to the first occurrence in the string pointed to
+by string1 of a character of the string pointed to by string2.
+
+:xmp.
+char * DH32ENTRY strpbrk (const char *string1, const char *string2);
+:exmp.
+
+
+:p.Parameters description &colon.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.const char *string1
+:c.input
+:c.string to search for characters.
+:row.
+:c.const char *string2
+:c.input
+:c.string containig characters to look for.
+:etable.
+
+
+.*******************************************************************************
+.*** fnmatch                                                                  ***
+.*******************************************************************************
+
+:h2 id=406.&titre_406.
+
+:p.
+Matches a file name using wildcards (OS/2 or POSIX semantics)
+
+:nt.
+This call is a good replacement of FSH_WILDMATCH.
+:ent.
+
+:xmp.
+int DH32ENTRY fnmatch (const char *mask, const char *name, int flags);
+:exmp.
+
+
+:p.Parameters description &colon.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.const char *mask
+:c.input
+:c.string containing wildcard.
+:row.
+:c.const char *name
+:c.input
+:c.file name to be matched by mask.
+:row.
+:c.int flags
+:c.input
+:c.flags to modify matching semantics. (_FNM_OS2, FNM_POSIX, _FNM_IGNORECASE)
+:etable.
+
+
+.*******************************************************************************
+.*** strtol                                                                  ***
+.*******************************************************************************
+
+:h2 id=407.&titre_407.
+
+:p.
+Converts a character string to a long integer.
+
+:xmp.
+long DH32ENTRY strtol (
+                       const char *string, 
+                       char **end_ptr, 
+                       int radix
+                      );
+:exmp.
+
+
+:p.Parameters description &colon.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.const char *string
+:c.input
+:c.String to be converted
+:row.
+:c.char **end_ptr
+:c.in/out
+:c.Filled with the pointer to the first character not converted
+:row.
+:c.int radix
+:c.input 
+:c.Base in which the number should be interpreted (auto (0), 8, 10, 16)
+:etable.
+
+.*******************************************************************************
+.*** sec32_attach_ses                                                        ***
+.*******************************************************************************
+
+:h2 id=408.&titre_408.
+
+:p.
+Attaches to sesdd32.sys and retieves sesdd32.sys's security entry points.
+
+:xmp.
+int DH32ENTRY sec32_attach_ses(
+                               void *SecHlp
+                              );
+:exmp.
+
+
+:p.Parameters description &colon.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.void *SecHlp
+:c.in/out
+:c.Pointer to a SecurityHelpers structure that will be filled with sesdd32.sys's SecHlp entry points
+:etable.

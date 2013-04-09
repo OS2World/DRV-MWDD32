@@ -1,0 +1,149 @@
+.*
+.* $Header: d:\\32bits\\ext2-os2\\doc\\mwdd32\\rcs\\changes.im,v 1.6 1997/03/15 17:13:14 Willm Exp $
+.*
+
+.* 32 bits OS/2 device driver and IFS support. Provides 32 bits kernel 
+.* services (DevHelp) and utility functions to 32 bits OS/2 ring 0 code 
+.* (device drivers and installable file system drivers).
+.* Copyright (C) 1995, 1996, 1997  Matthieu WILLM (willm@ibm.net)
+.*
+.* This program is free software; you can redistribute it and/or modify
+.* it under the terms of the GNU General Public License as published by
+.* the Free Software Foundation; either version 2 of the License, or
+.* (at your option) any later version.
+.*
+.* This program is distributed in the hope that it will be useful,
+.* but WITHOUT ANY WARRANTY; without even the implied warranty of
+.* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.* GNU General Public License for more details.
+.*
+.* You should have received a copy of the GNU General Public License
+.* along with this program; if not, write to the Free Software
+.* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+.nameit symbol=titre_600 text='History of changes'
+.nameit symbol=titre_601 text='From 1.10 to 1.20'
+.nameit symbol=titre_602 text='From 1.20 to 1.30'
+.nameit symbol=titre_603 text='From 1.30 to 1.40'
+.nameit symbol=titre_604 text='From 1.40 to 1.50'
+.nameit symbol=titre_605 text='From 1.50 to 1.60'
+.nameit symbol=titre_606 text='From 1.60 to 1.70'
+
+
+.*******************************************************************************
+.*** VI- History of changes.                                                ***
+.*******************************************************************************
+:h1 id=600.&titre_600.
+
+:p.
+This chapter describes the changes between each release of mwdd32.
+
+:ol compact.
+:li.:link reftype=hd refid=601.&titre_601.:elink.
+:li.:link reftype=hd refid=602.&titre_602.:elink.
+:li.:link reftype=hd refid=603.&titre_603.:elink.
+:li.:link reftype=hd refid=604.&titre_604.:elink.
+:li.:link reftype=hd refid=605.&titre_605.:elink.
+:li.:link reftype=hd refid=606.&titre_606.:elink.
+:eol.
+
+.*******************************************************************************
+.*** From 1.10 to 1.20                                                     ***
+.*******************************************************************************
+:h2 id=601.&titre_601.
+
+:ul compact.
+:li.Corrected a stupid packaging error (some sources were missing).
+:li.Added the following utility functions &colon.
+:sl compact.
+:li.strtol
+:esl.
+:li.Added swapper entry points to fsh32.lib and to the sample IFS skeleton &colon.
+:sl compact.
+:li.FS_ALLOCATEPAGESPACE
+:li.FS_DOPAGEIO
+:li.FS_OPENPAGEFILE
+:esl.
+:li.Added a "-q" command line switch to mwdd32.sys (quiet initialization).
+:eul.
+
+.*******************************************************************************
+.*** From 1.20 to 1.30                                                     ***
+.*******************************************************************************
+:h2 id=602.&titre_602.
+
+:ul compact.
+:li.Added the following fsh32 functions &colon.
+:sl compact.
+:li.fsh32_addshare
+:li.fsh32_removeshare
+:li.fsh32_setvolume
+:esl.
+:li.Added the following utility functions &colon.
+:sl compact.
+:li.sec32_attach_ses
+:esl.
+:li.Added support for 32 bits DEVICE drivers, as well as a sample skeleton.
+:li.Added support for 32 bits SES (Security Enabling Services) drivers, as well as a sample skeleton.
+:eul.
+
+.*******************************************************************************
+.*** From 1.30 to 1.40                                                       ***
+.*******************************************************************************
+:h2 id=603.&titre_603.
+
+:ul compact.
+:li.Corrected a bug in DevHlp32_InternalError (the beginning of the message was truncated).
+:li.Corrected a bug in fsh32_devioctl (I think I was tired when I first wrote it !)
+:li.Added the following DevHlp32 functions &colon.
+:sl compact.
+:li.DevHlp32_setIRQ
+:li.DevHlp32_UnSetIRQ
+:li.DevHlp32_EOI
+:esl.
+:li.Added a sample 32 bits interrupt handler in the BASEDEV skeleton
+:eul.
+
+.*******************************************************************************
+.*** From 1.40 to 1.50                                                       ***
+.*******************************************************************************
+:h2 id=604.&titre_604.
+
+:ul compact.
+:li.Added the following DevHlp32 functions &colon.
+:sl compact.
+:li.DevHlp32_PageListToLin
+:li.DevHlp32_AllocGDTSelector
+:li.DevHlp32_FreeGDTSelector
+:li.DevHlp32_AttachDD
+:li.DevHlp32_GetDosVar
+:esl.
+:eul.
+
+.*******************************************************************************
+.*** From 1.50 to 1.60                                                       ***
+.*******************************************************************************
+:h2 id=605.&titre_605.
+
+:ul compact.
+:li.Holger Veit added the following DevHlp32 functions &colon.
+:sl compact.
+:li.DevHlp32_CloseEventSem
+:li.DevHlp32_OpenEventSem
+:li.DevHlp32_PostEventSem
+:li.DevHlp32_ResetEventSem
+:li.DevHlp32_VerifyAccess
+:esl.
+:eul.
+
+.*******************************************************************************
+.*** From 1.60 to 1.70                                                       ***
+.*******************************************************************************
+:h2 id=606.&titre_606.
+
+:ul compact.
+:li.Upgraded from ALP 4.00.000 to ALP 4.00.001. This corrected some code generation problems.
+:li.Corrected a bug in DevHlp32_ProcBlock (return code was garbage).
+:li.A sample of a 32 bits device driver developed with the Watcom compiler has been added by Sander van Leeuwen. I didn't integrate it in the MWDD32 build tree and documentation yet, mainly because I don't have the watcom compiler to rebuild it. This sample is described in the file readme.doc in ./skeleton/watcom/watcom.zip.
+:eul.
+

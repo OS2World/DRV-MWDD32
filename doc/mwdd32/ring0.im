@@ -1,0 +1,155 @@
+.*
+.* $Header: d:\\32bits\\ext2-os2\\doc\\mwdd32\\rcs\\ring0.im,v 1.3 1997/03/15 17:13:14 Willm Exp $
+.*
+
+.* 32 bits OS/2 device driver and IFS support. Provides 32 bits kernel 
+.* services (DevHelp) and utility functions to 32 bits OS/2 ring 0 code 
+.* (device drivers and installable file system drivers).
+.* Copyright (C) 1995, 1996, 1997  Matthieu WILLM (willm@ibm.net)
+.*
+.* This program is free software; you can redistribute it and/or modify
+.* it under the terms of the GNU General Public License as published by
+.* the Free Software Foundation; either version 2 of the License, or
+.* (at your option) any later version.
+.*
+.* This program is distributed in the hope that it will be useful,
+.* but WITHOUT ANY WARRANTY; without even the implied warranty of
+.* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.* GNU General Public License for more details.
+.*
+.* You should have received a copy of the GNU General Public License
+.* along with this program; if not, write to the Free Software
+.* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+
+
+.nameit symbol=titre_300 text='32 bits ring 0 considerations'
+.nameit symbol=titre_301 text='stack based pointers vs FLAT based pointers'
+.nameit symbol=titre_302 text='converting 16&colon.16 pointers to FLAT pointers'
+
+:h1 id=300.&titre_300.
+
+:ul compact.
+:li.:link reftype=hd refid=301.&titre_301.:elink.
+:li.:link reftype=hd refid=302.&titre_302.:elink.
+:eul.
+
+:h2 id=301.&titre_301.
+:p.
+Under OS/2, at ring 0 SS is NOT equal to DS. With Visualage C++ you
+MUST use :color fc=red bc=default./Gr+ /Rn:color fc=default bc=default.
+compiler options.
+
+:p.
+SS!=DS also means that you cannot safely use or pass SS based addresses
+to functions. SS based addresses are for instance addresses of automatic 
+data (local variables and function parameters). To convert SS based 
+addresses to DS based addresses you must use the :color fc=red bc=default.__StackToFlat():color fc=default bc=default. routine, as
+in the following example &colon.
+
+:p.
+ILLEGAL CODE IN OS/2 KERNEL MODE (produces a trap D) &colon.
+:xmp.
+    int my_sub(int *a) {
+        /*
+         * a is treated as a FLAT based address by the compiler
+         */
+    }
+    int my_routine(void) {
+        int a;
+
+        /*
+         * In the following statement &amp.a is a STACK based address
+         */
+        return my_sub(&amp.a);
+    }
+:exmp.
+
+:p.
+WORKING CODE IN OS/2 KERNEL MODE &colon.
+:xmp.
+    int my_sub(int *a) {
+        /*
+         * a is treated as a FLAT based address by the compiler
+         */
+    }
+    int my_routine(void) {
+        int a;
+
+        /*
+         * Here the correct FLAT based value of &amp.a is passed to my_sub()
+         */
+        return my_sub(__StackToFlat(&amp.a));
+    }
+:exmp.
+
+:h2 id=302.&titre_302.
+
+:p.
+Because the PDD and IFS interfaces are still 16 bits, many parameters
+of routines (strategy routines for PDD, IFS entry points, DevHelp) 
+contain 16&colon.16 addresses. THEY CANNOT BE USED DIRECTLY &colon. YOU MUST CONVERT 
+THEM TO 0&colon.32 FIRST. To do this, use DevHlp32_VirtToLin, like in the following example &colon.
+
+:xmp.
+#define INCL_DOS
+#define INCL_DOSERRORS
+#define INCL_NOPMAPI
+#include <os2.h>
+
+#include <os2/types.h>
+#include <os2/StackToFlat.h>
+#include <os2/fsd32.h>
+#include <os2/devhlp32.h>
+
+/*
+ * struct fs32_findnext_parms {
+ *     unsigned short  flags;
+ *     unsigned short  level;
+ *     PTR16           pcMatch;
+ *     unsigned short  cbData;
+ *     PTR16           pData;
+ *     PTR16           pfsfsd;
+ *     PTR16           pfsfsi;
+ * };
+ */
+int FS32ENTRY fs32_findnext(struct fs32_findnext_parms *parms) {
+    struct fsfsi32 *pfsfsi;
+    struct fsfsd32 *pfsfsd;
+    char           *pData;
+    unsigned short *pcMatch;
+    int             rc;
+
+    /*
+     * parms is passed as a STACK based address by fs_findnext.asm
+     */
+    parms = __StackToFlat(parms);
+
+    /*
+     * We first convert all 16&colon.16 pointers to 0&colon.32
+     */
+    if ((rc = DevHlp32_VirtToLin(parms->pfsfsi, __StackToFlat(&amp.pfsfsi))) == NO_ERROR) {
+        if ((rc = DevHlp32_VirtToLin(parms->pfsfsd, __StackToFlat(&amp.pfsfsd))) == NO_ERROR) {
+            if ((rc = DevHlp32_VirtToLin(parms->pData, __StackToFlat(&amp.pData))) == NO_ERROR) {
+                if ((rc = DevHlp32_VirtToLin(parms->pcMatch, __StackToFlat(&amp.pcMatch))) == NO_ERROR) {
+
+                    /*
+                     * Insert your code here ...
+                     */
+
+                    rc = NO_ERROR;
+                }
+            }
+        }
+    }
+    return rc;
+}
+:exmp.
+
+:nt.
+:color fc=red bc=default.NEVER USE THE THUNKING FACILITIES OF VISUALAGE C++ OR OTHER 
+COMPILERS &colon. THEY USE A METHOD THAT SIMPLY DOES NOT WORK AT RING 0.:color fc=default bc=default.
+Especially NEVER use _Seg16, _Far16 and related keywords. ALL THUNKS
+MUST BE DONE MANUALLY. Look at the sources of mwdd32.sys for examples
+of manual 16->32 and 32->16 thunks.
+:ent.

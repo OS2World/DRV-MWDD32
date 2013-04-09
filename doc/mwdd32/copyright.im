@@ -1,0 +1,91 @@
+.*
+.* $Header: d:\\32bits\\ext2-os2\\doc\\mwdd32\\rcs\\copyright.im,v 1.5 1997/03/15 17:13:14 Willm Exp $
+.*
+
+.* 32 bits OS/2 device driver and IFS support. Provides 32 bits kernel 
+.* services (DevHelp) and utility functions to 32 bits OS/2 ring 0 code 
+.* (device drivers and installable file system drivers).
+.* Copyright (C) 1995, 1996, 1997  Matthieu WILLM (willm@ibm.net)
+.*
+.* This program is free software; you can redistribute it and/or modify
+.* it under the terms of the GNU General Public License as published by
+.* the Free Software Foundation; either version 2 of the License, or
+.* (at your option) any later version.
+.*
+.* This program is distributed in the hope that it will be useful,
+.* but WITHOUT ANY WARRANTY; without even the implied warranty of
+.* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.* GNU General Public License for more details.
+.*
+.* You should have received a copy of the GNU General Public License
+.* along with this program; if not, write to the Free Software
+.* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+.nameit symbol=titre_200 text='Copyright information'
+
+:h1 id=200.&titre_200.
+
+:xmp.
+ 32 bits OS/2 device driver and IFS support. Provides 32 bits kernel 
+ services (DevHelp) and utility functions to 32 bits OS/2 ring 0 code 
+ (device drivers and installable file system drivers).
+ Copyright (C) 1995, 1996, 1997  Matthieu WILLM
+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+:exmp.
+
+:p.
+This package contains GNU GPL copyrighted code whose owners are &colon.
+:ul compact.
+:li.Linus Torvalds and Lars Wirsenius (:link reftype=fn refid=2021.list of files:elink.)
+:li.Eberhard Mattes (:link reftype=fn refid=2022.list of files:elink.)
+:li.Holger Veit (:link reftype=fn refid=2023.list of files:elink.)
+:eul.
+
+:nt.
+If you want to use my own parts (parts that do not contain code from others) but not under the GNU GPL
+you must contact me and sign an agreement with me.
+
+
+:fn id=2021.
+:ul compact.
+:li.util/vsprintf.c
+:eul.
+:efn.
+
+:fn id=2022.
+:ul compact.
+:li.util/atol.c
+:li.util/ctype.c
+:li.util/fnmatch.c
+:li.util/strpbrk.c
+:li.util/strtoul.c
+:li.util/strtol.c
+:li.util/strupr.c
+:li.util/strtok.c
+:li.include/os2/fnmatch.h
+:li.include/os2/ctype.h
+:eul.
+:efn.
+
+:fn id=2023.
+:ul compact.
+:li.devhlp32/DevHlp32_CloseEventSem.asm
+:li.devhlp32/DevHlp32_OpenEventSem.asm
+:li.devhlp32/DevHlp32_PostEventSem.asm
+:li.devhlp32/DevHlp32_ResetEventSem.asm
+:li.devhlp32/DevHlp32_VerifyAccess.asm
+:eul.
+:efn.

@@ -1,0 +1,84 @@
+;
+; $Header: D:/32bits/ext2-os2/skeleton/ifs/rcs/fsd32.def,v 1.3 1997/03/16 13:01:55 Willm Exp Willm $
+;
+
+; 32 bits OS/2 device driver and IFS support. Provides 32 bits kernel 
+; services (DevHelp) and utility functions to 32 bits OS/2 ring 0 code 
+; (device drivers and installable file system drivers).
+; Copyright (C) 1995, 1996, 1997  Matthieu WILLM (willm@ibm.net)
+;
+; This program is free software; you can redistribute it and/or modify
+; it under the terms of the GNU General Public License as published by
+; the Free Software Foundation; either version 2 of the License, or
+; (at your option) any later version.
+;
+; This program is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+; GNU General Public License for more details.
+;
+; You should have received a copy of the GNU General Public License
+; along with this program; if not, write to the Free Software
+; Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+PHYSICAL DEVICE fsd32
+STUB NONE
+DESCRIPTION 'Sample 32 bits file system driver for OS/2 - Copyright (C) Matthieu WILLM 1995, 1996, 1997'
+DATA PRELOAD SHARED
+CODE PRELOAD
+SEGMENTS
+        CODE32 class 'CODE'		; 32 bits swappable code segment
+        EXT2_FIXED_CODE class 'CODE'	; 32 bits non swappable code segment
+        CODE16 class 'CODE'		; 16 bits swappable code segment
+        FIXED_CODE16 class 'CODE'	; 16 bits non swappable code segment
+;       DATA32 class 'DATA' MIXED1632
+;       BSS32  class 'BSS' MIXED1632
+        DATA16 class 'DATA16'		; 16 bits swappable data segment
+        FIXED_DATA16 class 'DATA16'	; 16 bits non swappable data segment
+        CONST32_RO class 'CONST'	; 32 bits read-only data (non swappable)
+EXPORTS
+    FS_ALLOCATEPAGESPACE
+    FS_ATTACH
+    FS_CANCELLOCKREQUEST             ; Not yet implemented
+    FS_CHDIR
+    FS_CHGFILEPTR
+    FS_CLOSE
+    FS_COMMIT
+    FS_COPY
+    FS_DELETE
+    FS_DOPAGEIO
+    FS_EXIT
+    FS_FILEATTRIBUTE
+    FS_FILEINFO
+    FS_FILEIO                        ; Not yet implemented
+    FS_FILELOCKS                     ; Not yet implemented
+    FS_FINDCLOSE
+    FS_FINDFIRST
+    FS_FINDFROMNAME
+    FS_FINDNEXT
+    FS_FINDNOTIFYCLOSE              ; Obsolete in OS/2 WARP
+    FS_FINDNOTIFYFIRST              ; Obsolete in OS/2 WARP
+    FS_FINDNOTIFYNEXT               ; Obsolete in OS/2 WARP
+    FS_FLUSHBUF
+    FS_FSCTL
+    FS_FSINFO
+    FS_INIT
+    FS_IOCTL
+    FS_MKDIR
+    FS_MOUNT
+    FS_MOVE
+    FS_NEWSIZE
+    FS_NMPIPE
+    FS_OPENCREATE
+    FS_OPENPAGEFILE
+    FS_PATHINFO
+    FS_PROCESSNAME
+    FS_READ
+    FS_RMDIR
+    FS_SETSWAP
+    FS_SHUTDOWN
+;   FS_VERIFYUNCNAME                N/A : local FSD
+    FS_WRITE
+
+    FS_ATTRIBUTE
+    FS_NAME

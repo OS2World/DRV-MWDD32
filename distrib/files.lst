@@ -1,0 +1,573 @@
+#
+# $Header: d:\\32bits\\ext2-os2\\distrib\\rcs\\files.lst,v 1.7 1997/03/15 16:44:41 Willm Exp $
+#
+
+# 32 bits Linux ext2 file system driver for OS/2 WARP - Allows OS/2 to
+# access your Linux ext2fs partitions as normal drive letters.
+# Copyright (C) 1995, 1996, 1997  Matthieu WILLM (willm@ibm.net)
+#
+# 32 bits OS/2 device driver and IFS support. Provides 32 bits kernel
+# services (DevHelp) and utility functions to 32 bits OS/2 ring 0 code
+# (device drivers and installable file system drivers).
+# Copyright (C) 1995, 1996, 1997  Matthieu WILLM (willm@ibm.net)
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+!include ../makefile.inc
+
+EXT2OS2_DISTRIB_FILES =                                     \
+                $(EXT2OS2_BASE)\mwdd32\mwdd32.sys           \
+                $(EXT2OS2_BASE)\mwdd32\mwdd32.sym           \
+                $(EXT2OS2_BASE)\ext2-os2.ifs                \
+                $(EXT2OS2_BASE)\ext2-os2.sym                \
+                $(EXT2OS2_BASE)\ext2-os2.ddp                \
+                $(EXT2OS2_BASE)\console\ext2-os2.exe        \
+                $(EXT2OS2_BASE)\misc\hardlink.exe           \
+                $(EXT2OS2_BASE)\misc\sync.exe               \
+                $(EXT2OS2_BASE)\misc\umount.exe             \
+                $(EXT2OS2_BASE)\misc\remount.exe            \
+                $(EXT2OS2_BASE)\misc\ext2_lw.exe            \
+                $(EXT2OS2_BASE)\uext2\uext2.dll             \
+                $(EXT2OS2_BASE)\doc\ext2-os2\ext2-os2.inf   \
+                $(EXT2OS2_BASE)\doc\ext2-os2\ext2-os2.htm   \
+                $(EXT2OS2_BASE)\doc\ext2-os2\README         \
+                $(EXT2OS2_BASE)\doc\COPYING                 \
+                $(EXT2OS2_BASE)\ext2flt\ext2flt.ddp         \
+                $(EXT2OS2_BASE)\ext2flt\ext2flt.doc         \
+                $(EXT2OS2_BASE)\ext2flt\EXT2FLT.FLT         \
+                $(EXT2OS2_BASE)\ext2flt\ext2flt.sym         \
+                $(EXT2OS2_BASE)\distrib\file_id.diz         \
+                $(EXT2OS2_BASE)\vfsapi\vfsapi.dll           \
+                $(EXT2OS2_BASE)\vfsapi\vfsapi.lib           \
+                $(EXT2OS2_BASE)\distrib\32drv$(MWDD32_PKG_VER).zip       \
+                $(E2FSPROGS)\e2fsck\e2fsck.exe         \
+                $(E2FSPROGS)\misc\badblks.exe          \
+                $(E2FSPROGS)\misc\mke2fs.exe           \
+                $(E2FSPROGS)\misc\chattr.exe           \
+                $(E2FSPROGS)\misc\lsattr.exe           \
+                $(E2FSPROGS)\misc\tune2fs.exe          \
+                $(E2FSPROGS)\debugfs\debugfs.exe       \
+                $(E2FSPROGS)\lib\ext2fs\ext2fs.dll     \
+                $(E2FSPROGS)\lib\et\com_err.dll        \
+                $(E2FSPROGS)\lib\uuid\uuid.dll         \
+                $(E2FSPROGS)\lib\ss\ss.dll             \
+                $(E2FSPROGS)\lib\e2p\e2p.dll           \
+                $(EXT2OS2_BASE)\microfsd\microfsd.fsd  \
+                $(EXT2OS2_BASE)\minifsd\minifsd.fsd    \
+                ext2_src.zip
+
+MWDD32_DISTRIB_FILES =                        \
+$(EXT2OS2_BASE)\mwdd32\mwdd32.sys             \
+$(EXT2OS2_BASE)\mwdd32\mwdd32.sym             \
+$(EXT2OS2_BASE)\fsh32\fsh32.lib               \
+$(EXT2OS2_BASE)\doc\COPYING                   \
+$(EXT2OS2_BASE)\doc\mwdd32\READ.ME            \
+$(EXT2OS2_BASE)\doc\mwdd32\mwdd32.inf         \
+mwdd_src.zip
+
+
+MWDD32_FILES =                                       \
+$(EXT2OS2_BASE)\makefile.inc                         \
+$(EXT2OS2_BASE)\mwdd32\makefile                      \
+$(EXT2OS2_BASE)\mwdd32\mwdd32.def                    \
+$(EXT2OS2_BASE)\mwdd32\mwdd32_banner.c               \
+$(EXT2OS2_BASE)\mwdd32\mwdd32_close.c                \
+$(EXT2OS2_BASE)\mwdd32\mwdd32_end.asm                \
+$(EXT2OS2_BASE)\mwdd32\mwdd32_entry_points.h         \
+$(EXT2OS2_BASE)\mwdd32\mwdd32_idc.c                  \
+$(EXT2OS2_BASE)\mwdd32\mwdd32_init_base.c            \
+$(EXT2OS2_BASE)\mwdd32\mwdd32_init_complete.c        \
+$(EXT2OS2_BASE)\mwdd32\mwdd32_invalid_command.c      \
+$(EXT2OS2_BASE)\mwdd32\mwdd32_ioctl.c                \
+$(EXT2OS2_BASE)\mwdd32\mwdd32_ioctl.h                \
+$(EXT2OS2_BASE)\mwdd32\mwdd32_open.c                 \
+$(EXT2OS2_BASE)\mwdd32\mwdd32_pre_init_base.asm      \
+$(EXT2OS2_BASE)\mwdd32\mwdd32_shutdown.c             \
+$(EXT2OS2_BASE)\mwdd32\mwdd32_start.asm              \
+$(EXT2OS2_BASE)\mwdd32\mwdd32.h                      \
+$(EXT2OS2_BASE)\mwdd32\mwdd32_strategy.c             \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_VMLock.asm             \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_AllocGDTSelector.c      \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_AllocOneGDTSelector.asm \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_FreeGDTSelector.asm     \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_VMUnLock.asm           \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_VirtToLin.asm          \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_GetDosVar.asm          \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_Security.asm           \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_AttachToDD.asm         \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_SaveMessage.asm        \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_InternalError.asm      \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_VMAlloc.asm            \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_VMFree.asm             \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_ProcBlock.asm          \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_ProcRun.asm            \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_LinToPageList.asm      \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_PageListToLin.asm      \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_GetInfoSegs.asm        \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_yield.asm              \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_SetIRQ.asm             \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_UnSetIRQ.asm           \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_EOI.asm                \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_AttachDD.c             \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_CloseEventSem.asm      \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_OpenEventSem.asm       \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_PostEventSem.asm       \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_ResetEventSem.asm      \
+$(EXT2OS2_BASE)\devhlp32\DevHlp32_VerifyAccess.asm       \
+$(EXT2OS2_BASE)\util\vsprintf.c                          \
+$(EXT2OS2_BASE)\util\strtoul.c                              \
+$(EXT2OS2_BASE)\util\strtol.c                               \
+$(EXT2OS2_BASE)\util\ctype.c                                \
+$(EXT2OS2_BASE)\util\atol.c                                 \
+$(EXT2OS2_BASE)\util\strupr.c                               \
+$(EXT2OS2_BASE)\util\strpbrk.c                              \
+$(EXT2OS2_BASE)\util\strtok.c                              \
+$(EXT2OS2_BASE)\util\fnmatch.c                              \
+$(EXT2OS2_BASE)\util\sec32_attach_ses.asm                   \
+$(EXT2OS2_BASE)\include\os2\types.h \
+$(EXT2OS2_BASE)\include\os2\stacktoflat.h \
+$(EXT2OS2_BASE)\include\os2\devhlp32.h \
+$(EXT2OS2_BASE)\include\os2\reqpkt32.h \
+$(EXT2OS2_BASE)\include\os2\r0thunk.inc \
+$(EXT2OS2_BASE)\include\os2\segdef.inc \
+$(EXT2OS2_BASE)\include\os2\mwdd32_ioctl.inc \
+$(EXT2OS2_BASE)\include\os2\mwdd32_segdef.inc \
+$(EXT2OS2_BASE)\include\os2\fnmatch.h \
+$(EXT2OS2_BASE)\include\os2\ctype.h   \
+$(EXT2OS2_BASE)\include\os2\SecHlp.h  \
+$(EXT2OS2_BASE)\makefile
+
+BASEDEV_SKEL_FILES = \
+$(EXT2OS2_BASE)\skeleton\basedev\drv32.def \
+$(EXT2OS2_BASE)\skeleton\basedev\drv32_banner.c \
+$(EXT2OS2_BASE)\skeleton\basedev\drv32_close.c \
+$(EXT2OS2_BASE)\skeleton\basedev\drv32_read.c \
+$(EXT2OS2_BASE)\skeleton\basedev\drv32_write.c \
+$(EXT2OS2_BASE)\skeleton\basedev\drv32_data.c \
+$(EXT2OS2_BASE)\skeleton\basedev\drv32_end.asm \
+$(EXT2OS2_BASE)\skeleton\basedev\drv32_entry_points.h \
+$(EXT2OS2_BASE)\skeleton\basedev\drv32_idc.c \
+$(EXT2OS2_BASE)\skeleton\basedev\drv32_init_base.c \
+$(EXT2OS2_BASE)\skeleton\basedev\drv32_init_complete.c \
+$(EXT2OS2_BASE)\skeleton\basedev\drv32_invalid_command.c \
+$(EXT2OS2_BASE)\skeleton\basedev\drv32_ioctl.c \
+$(EXT2OS2_BASE)\skeleton\basedev\drv32_open.c \
+$(EXT2OS2_BASE)\skeleton\basedev\drv32_pre_init_base.asm \
+$(EXT2OS2_BASE)\skeleton\basedev\drv32_segdef.inc \
+$(EXT2OS2_BASE)\skeleton\basedev\drv32_shutdown.c \
+$(EXT2OS2_BASE)\skeleton\basedev\drv32_start.asm \
+$(EXT2OS2_BASE)\skeleton\basedev\drv32_strategy.c \
+$(EXT2OS2_BASE)\skeleton\basedev\drv32_irq.c \
+$(EXT2OS2_BASE)\skeleton\basedev\drv32_stub_irq.asm \
+$(EXT2OS2_BASE)\skeleton\basedev\drv32.sys \
+$(EXT2OS2_BASE)\skeleton\basedev\drv32.sym \
+$(EXT2OS2_BASE)\skeleton\basedev\makefile
+
+IFS_SKEL_FILES =                                           \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_banner.c                 \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_allocatepagespace.c      \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_openpagefile.c           \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_dopageio.c               \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_chdir.c                  \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_chgfileptr.c             \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_close.c                  \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_commit.c                 \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_delete.c                 \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_exit.c                   \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_fileattribute.c          \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_fileinfo.c               \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_findclose.c              \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_findfirst.c              \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_findfromname.c           \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_findnext.c               \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_flushbuf.c               \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_fsctl.c                  \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_fsinfo.c                 \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_init.c                   \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_ioctl.c                  \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_mkdir.c                  \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_mount.c                  \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_move.c                   \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_newsize.c                \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_opencreate.c             \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_pathinfo.c               \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_read.c                   \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_rmdir.c                  \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_shutdown.c               \
+$(EXT2OS2_BASE)\skeleton\ifs\fs32_write.c                  \
+$(EXT2OS2_BASE)\skeleton\ifs\fsd32.def                     \
+$(EXT2OS2_BASE)\skeleton\ifs\fsd32_segdef.inc              \
+$(EXT2OS2_BASE)\skeleton\ifs\fs_attribute.asm              \
+$(EXT2OS2_BASE)\skeleton\ifs\fs_name.asm                   \
+$(EXT2OS2_BASE)\skeleton\ifs\fsd32.ifs                     \
+$(EXT2OS2_BASE)\skeleton\ifs\fsd32.sym                     \
+$(EXT2OS2_BASE)\skeleton\ifs\makefile
+
+MWDD32_DOC_FILES =                \
+$(EXT2OS2_BASE)\doc\COPYING       \
+$(EXT2OS2_BASE)\doc\mwdd32\READ.ME
+
+MWDD32_PKG_FILES =                      \
+$(EXT2OS2_BASE)\distrib\makefile        \
+$(EXT2OS2_BASE)\distrib\files.lst       \
+$(EXT2OS2_BASE)\distrib\zipnote.mwdd32
+
+EXT2OS2_PKG_FILES =                     \
+$(EXT2OS2_BASE)\distrib\makefile        \
+$(EXT2OS2_BASE)\distrib\files.lst       \
+$(EXT2OS2_BASE)\distrib\file_id.diz     \
+$(EXT2OS2_BASE)\distrib\zipnote.ext2-os2
+
+FSH32_FILES =                                   \
+$(EXT2OS2_BASE)\fsh32\fsh32_setvolume.asm       \
+$(EXT2OS2_BASE)\fsh32\fsh32_addshare.asm        \
+$(EXT2OS2_BASE)\fsh32\fsh32_removeshare.asm     \
+$(EXT2OS2_BASE)\fsh32\fsh32_devioctl.asm        \
+$(EXT2OS2_BASE)\fsh32\fsh32_dovolio.asm         \
+$(EXT2OS2_BASE)\fsh32\fsh32_findduphvpb.asm     \
+$(EXT2OS2_BASE)\fsh32\fsh32_forcenoswap.asm     \
+$(EXT2OS2_BASE)\fsh32\fsh32_getvolparm.asm      \
+$(EXT2OS2_BASE)\fsh32\fsh32_qsysinfo.asm        \
+$(EXT2OS2_BASE)\fsh32\fsh32_segalloc.asm        \
+$(EXT2OS2_BASE)\fsh32\fsh32_ioboost.asm         \
+$(EXT2OS2_BASE)\fsh32\fs_init.asm               \
+$(EXT2OS2_BASE)\fsh32\fs_thunks.asm             \
+$(EXT2OS2_BASE)\fsh32\fsd32_segdef.inc          \
+$(EXT2OS2_BASE)\include\os2\fsd32.h             \
+$(EXT2OS2_BASE)\include\os2\fsd.inc             \
+$(EXT2OS2_BASE)\include\os2\fsh32.h             \
+$(EXT2OS2_BASE)\fsh32\makefile
+
+MWDD32_INF_FILES =                      \
+$(EXT2OS2_BASE)\doc\mwdd32\makefile     \
+$(EXT2OS2_BASE)\doc\mwdd32\mwdd32.ipf   \
+$(EXT2OS2_BASE)\doc\mwdd32\copyright.im \
+$(EXT2OS2_BASE)\doc\mwdd32\devhlp32.im  \
+$(EXT2OS2_BASE)\doc\mwdd32\fsh32.im     \
+$(EXT2OS2_BASE)\doc\mwdd32\changes.im   \
+$(EXT2OS2_BASE)\doc\mwdd32\ring0.im     \
+$(EXT2OS2_BASE)\doc\mwdd32\samples.im   \
+$(EXT2OS2_BASE)\doc\mwdd32\utils.im
+
+
+
+EXT2OS2_FILES =                                   \
+$(EXT2OS2_BASE)\fsd32\end.asm                     \
+$(EXT2OS2_BASE)\fsd32\fileinfo.c                  \
+$(EXT2OS2_BASE)\fsd32\fs32_allocatepagespace.c    \
+$(EXT2OS2_BASE)\fsd32\fs32_dopageio.c             \
+$(EXT2OS2_BASE)\fsd32\fs32_openpagefile.c         \
+$(EXT2OS2_BASE)\fsd32\fs32_chdir.c                \
+$(EXT2OS2_BASE)\fsd32\fs32_chgfileptr.c           \
+$(EXT2OS2_BASE)\fsd32\fs32_close.c                \
+$(EXT2OS2_BASE)\fsd32\fs32_commit.c               \
+$(EXT2OS2_BASE)\fsd32\fs32_delete.c               \
+$(EXT2OS2_BASE)\fsd32\fs32_exit.c                 \
+$(EXT2OS2_BASE)\fsd32\fs32_fileattribute.c        \
+$(EXT2OS2_BASE)\fsd32\fs32_fileinfo.c             \
+$(EXT2OS2_BASE)\fsd32\fs32_findclose.c            \
+$(EXT2OS2_BASE)\fsd32\fs32_findfirst.c            \
+$(EXT2OS2_BASE)\fsd32\fs32_findfromname.c         \
+$(EXT2OS2_BASE)\fsd32\fs32_findnext.c             \
+$(EXT2OS2_BASE)\fsd32\fs32_flushbuf.c             \
+$(EXT2OS2_BASE)\fsd32\fs32_fsctl.c                \
+$(EXT2OS2_BASE)\fsd32\fs32_fsinfo.c               \
+$(EXT2OS2_BASE)\fsd32\fs32_init.c                 \
+$(EXT2OS2_BASE)\fsd32\fs32_ioctl.c                \
+$(EXT2OS2_BASE)\fsd32\fs32_mkdir.c                \
+$(EXT2OS2_BASE)\fsd32\fs32_mount.c                \
+$(EXT2OS2_BASE)\fsd32\fs32_move.c                 \
+$(EXT2OS2_BASE)\fsd32\fs32_newsize.c              \
+$(EXT2OS2_BASE)\fsd32\fs32_opencreate.c           \
+$(EXT2OS2_BASE)\fsd32\fs32_pathinfo.c             \
+$(EXT2OS2_BASE)\fsd32\fs32_read.c                 \
+$(EXT2OS2_BASE)\fsd32\fs32_rmdir.c                \
+$(EXT2OS2_BASE)\fsd32\fs32_shutdown.c             \
+$(EXT2OS2_BASE)\fsd32\fs32_write.c                \
+$(EXT2OS2_BASE)\fsd32\fs_attribute.asm            \
+$(EXT2OS2_BASE)\fsd32\fs_name.asm                 \
+$(EXT2OS2_BASE)\fsd32\start.asm                   \
+$(EXT2OS2_BASE)\vfs\buffer.c                      \
+$(EXT2OS2_BASE)\vfs\dcache.c                      \
+$(EXT2OS2_BASE)\vfs\file_table.c                  \
+$(EXT2OS2_BASE)\vfs\inode.c                       \
+$(EXT2OS2_BASE)\vfs\ll_rw_block.c                 \
+$(EXT2OS2_BASE)\vfs\misc.c                        \
+$(EXT2OS2_BASE)\vfs\pageio.c                      \
+$(EXT2OS2_BASE)\vfs\read_write.c                  \
+$(EXT2OS2_BASE)\vfs\request_list.c                \
+$(EXT2OS2_BASE)\vfs\sched.c                       \
+$(EXT2OS2_BASE)\vfs\strategy2.asm                 \
+$(EXT2OS2_BASE)\vfs\minifsd.asm                   \
+$(EXT2OS2_BASE)\vfs\bitops.asm                    \
+$(EXT2OS2_BASE)\vfs\super.c                       \
+$(EXT2OS2_BASE)\vfs\namei.c                       \
+$(EXT2OS2_BASE)\ext2\balloc.c                     \
+$(EXT2OS2_BASE)\ext2\bitmap.c                     \
+$(EXT2OS2_BASE)\ext2\dir.c                        \
+$(EXT2OS2_BASE)\ext2\file.c                       \
+$(EXT2OS2_BASE)\ext2\fsync.c                      \
+$(EXT2OS2_BASE)\ext2\ialloc.c                     \
+$(EXT2OS2_BASE)\ext2\inode.c                      \
+$(EXT2OS2_BASE)\ext2\namei.c                      \
+$(EXT2OS2_BASE)\ext2\super.c                      \
+$(EXT2OS2_BASE)\ext2\truncate.c                   \
+$(EXT2OS2_BASE)\ext2\ioctl.c                      \
+$(EXT2OS2_BASE)\include\linux\errno.h             \
+$(EXT2OS2_BASE)\include\linux\ext2_fs.h           \
+$(EXT2OS2_BASE)\include\linux\ext2_fs_i.h         \
+$(EXT2OS2_BASE)\include\linux\ext2_fs_sb.h        \
+$(EXT2OS2_BASE)\include\linux\ext2_proto.h        \
+$(EXT2OS2_BASE)\include\linux\fcntl.h             \
+$(EXT2OS2_BASE)\include\linux\fs.h                \
+$(EXT2OS2_BASE)\include\linux\fs_proto.h          \
+$(EXT2OS2_BASE)\include\linux\locks.h             \
+$(EXT2OS2_BASE)\include\linux\resource.h          \
+$(EXT2OS2_BASE)\include\linux\sched.h             \
+$(EXT2OS2_BASE)\include\linux\stat.h              \
+$(EXT2OS2_BASE)\include\linux\wait.h              \
+$(EXT2OS2_BASE)\include\linux\ioctl.h             \
+$(EXT2OS2_BASE)\include\asm\bitops.h              \
+$(EXT2OS2_BASE)\include\asm\ioctl.h               \
+$(EXT2OS2_BASE)\include\os2\bounds.h              \
+$(EXT2OS2_BASE)\include\os2\errors.h              \
+$(EXT2OS2_BASE)\include\os2\filefind.h            \
+$(EXT2OS2_BASE)\include\os2\ifsdbg.h              \
+$(EXT2OS2_BASE)\include\os2\log.h                 \
+$(EXT2OS2_BASE)\include\os2\magic.h               \
+$(EXT2OS2_BASE)\include\os2\minifsd.h             \
+$(EXT2OS2_BASE)\include\os2\os2misc.h             \
+$(EXT2OS2_BASE)\include\os2\os2proto.h            \
+$(EXT2OS2_BASE)\include\os2\request_list.h        \
+$(EXT2OS2_BASE)\include\os2\trace.h               \
+$(EXT2OS2_BASE)\include\os2\types.h               \
+$(EXT2OS2_BASE)\include\os2\vfsapi.h              \
+$(EXT2OS2_BASE)\include\os2\volume.h              \
+$(EXT2OS2_BASE)\include\os2\fsd32_segdef.inc      \
+$(EXT2OS2_BASE)\ifstkt\fsd.h                      \
+$(EXT2OS2_BASE)\ifstkt\fsh.h                      \
+$(EXT2OS2_BASE)\ifstkt\fshelper.lib               \
+$(EXT2OS2_BASE)\util\attr.c                       \
+$(EXT2OS2_BASE)\util\datetime.c                   \
+$(EXT2OS2_BASE)\util\isfat.c                      \
+$(EXT2OS2_BASE)\util\pathutil.c                   \
+$(EXT2OS2_BASE)\util\strnicmp.c                   \
+$(EXT2OS2_BASE)\util\util.c                       \
+$(EXT2OS2_BASE)\banner.c                          \
+$(EXT2OS2_BASE)\case.c                            \
+$(EXT2OS2_BASE)\files.c                           \
+$(EXT2OS2_BASE)\log.c                             \
+$(EXT2OS2_BASE)\maperr.c                          \
+$(EXT2OS2_BASE)\misc_data.c                       \
+$(EXT2OS2_BASE)\panic.c                           \
+$(EXT2OS2_BASE)\trace.c                           \
+$(EXT2OS2_BASE)\volume.c                          \
+$(EXT2OS2_BASE)\ext2-os2.def                      \
+$(EXT2OS2_BASE)\makefile                          \
+$(EXT2OS2_BASE)\makefile.inc                      \
+$(EXT2OS2_BASE)\makefile.ext2-os2                 \
+$(EXT2OS2_BASE)\ext2-os2.ddp
+
+
+CONSOLE_SRC =                                 \
+$(EXT2OS2_BASE)\console\nb.c                  \
+$(EXT2OS2_BASE)\console\makefile              \
+$(EXT2OS2_BASE)\console\nb.dlg                \
+$(EXT2OS2_BASE)\console\nb.h                  \
+$(EXT2OS2_BASE)\console\nb.rc                 \
+$(EXT2OS2_BASE)\console\stdout.c
+
+UTILS_SRC =                                   \
+$(EXT2OS2_BASE)\misc\hardlink.c               \
+$(EXT2OS2_BASE)\misc\sync.c                   \
+$(EXT2OS2_BASE)\misc\umount.c                 \
+$(EXT2OS2_BASE)\misc\remount.c                \
+$(EXT2OS2_BASE)\misc\ext2_lw.c                \
+$(EXT2OS2_BASE)\misc\makefile                 \
+$(EXT2OS2_BASE)\uext2\uext2.c                 \
+$(EXT2OS2_BASE)\uext2\uext2.def               \
+$(EXT2OS2_BASE)\uext2\makefile
+
+VFSAPI_SRC =                                  \
+$(EXT2OS2_BASE)\vfsapi\vfsapi.def             \
+$(EXT2OS2_BASE)\vfsapi\makefile               \
+$(EXT2OS2_BASE)\vfsapi\stat.c                 \
+$(EXT2OS2_BASE)\vfsapi\link.c                 \
+$(EXT2OS2_BASE)\vfsapi\ioctl.c                \
+$(EXT2OS2_BASE)\vfsapi\sync.c
+
+EXT2OS2_DOC_SRC =                                      \
+$(EXT2OS2_BASE)\doc\COPYING                            \
+$(EXT2OS2_BASE)\doc\ext2-os2\makefile                  \
+$(EXT2OS2_BASE)\doc\ext2-os2\ext2-os2.ipf              \
+$(EXT2OS2_BASE)\doc\ext2-os2\changes.im                \
+$(EXT2OS2_BASE)\doc\ext2-os2\compile.im                \
+$(EXT2OS2_BASE)\doc\ext2-os2\COPYRIGH.IM               \
+$(EXT2OS2_BASE)\doc\ext2-os2\features.im               \
+$(EXT2OS2_BASE)\doc\ext2-os2\INSTALL.IM                \
+$(EXT2OS2_BASE)\doc\ext2-os2\intro.im                  \
+$(EXT2OS2_BASE)\doc\ext2-os2\USAGE.IM                  \
+$(EXT2OS2_BASE)\doc\ext2-os2\WARNING.IM                \
+$(EXT2OS2_BASE)\doc\ext2-os2\vfsapi.im                 \
+$(EXT2OS2_BASE)\doc\ext2-os2\bootext2.im               \
+$(EXT2OS2_BASE)\doc\ext2-os2\e2fsprogs.im              \
+$(EXT2OS2_BASE)\doc\ext2-os2\e2fsck.im                 \
+$(EXT2OS2_BASE)\doc\ext2-os2\mke2fs.im                 \
+$(EXT2OS2_BASE)\doc\ext2-os2\badblocks.im              \
+$(EXT2OS2_BASE)\doc\ext2-os2\debugfs.im                \
+$(EXT2OS2_BASE)\doc\ext2-os2\chattr.im                 \
+$(EXT2OS2_BASE)\doc\ext2-os2\lsattr.im                 \
+$(EXT2OS2_BASE)\doc\ext2-os2\utils.im                  \
+$(EXT2OS2_BASE)\doc\ext2-os2\tune2fs.im                \
+$(EXT2OS2_BASE)\doc\ext2-os2\sync.im                   \
+$(EXT2OS2_BASE)\doc\ext2-os2\umount.im                 \
+$(EXT2OS2_BASE)\doc\ext2-os2\remount.im                \
+$(EXT2OS2_BASE)\doc\ext2-os2\hardlink.im               \
+$(EXT2OS2_BASE)\doc\ext2-os2\faq.im                    \
+$(EXT2OS2_BASE)\doc\ext2-os2\README
+
+EXT2FLT_SRC =                             \
+$(EXT2OS2_BASE)\ext2flt\MAKEFILE          \
+$(EXT2OS2_BASE)\ext2flt\debug.h           \
+$(EXT2OS2_BASE)\ext2flt\e2data.c          \
+$(EXT2OS2_BASE)\ext2flt\e2data.h          \
+$(EXT2OS2_BASE)\ext2flt\e2filt.c          \
+$(EXT2OS2_BASE)\ext2flt\e2filt.h          \
+$(EXT2OS2_BASE)\ext2flt\e2header.asm      \
+$(EXT2OS2_BASE)\ext2flt\e2init.c          \
+$(EXT2OS2_BASE)\ext2flt\e2init.h          \
+$(EXT2OS2_BASE)\ext2flt\e2inutil.c        \
+$(EXT2OS2_BASE)\ext2flt\e2inutil.h        \
+$(EXT2OS2_BASE)\ext2flt\e2iocmd.c         \
+$(EXT2OS2_BASE)\ext2flt\e2iocmd.h         \
+$(EXT2OS2_BASE)\ext2flt\e2part.c          \
+$(EXT2OS2_BASE)\ext2flt\e2part.h          \
+$(EXT2OS2_BASE)\ext2flt\e2router.c        \
+$(EXT2OS2_BASE)\ext2flt\e2router.h        \
+$(EXT2OS2_BASE)\ext2flt\e2virtio.c        \
+$(EXT2OS2_BASE)\ext2flt\e2virtio.h        \
+$(EXT2OS2_BASE)\ext2flt\e2wrap.asm        \
+$(EXT2OS2_BASE)\ext2flt\e2wrap.h          \
+$(EXT2OS2_BASE)\ext2flt\ext2flt.def       \
+$(EXT2OS2_BASE)\ext2flt\ext2flt.doc       \
+$(EXT2OS2_BASE)\ext2flt\ext2flt2.def      \
+$(EXT2OS2_BASE)\ext2flt\file_id.diz       \
+$(EXT2OS2_BASE)\ext2flt\make.cmd          \
+$(EXT2OS2_BASE)\ext2flt\makefile.msc      \
+$(EXT2OS2_BASE)\ext2flt\os2head.h         \
+$(EXT2OS2_BASE)\ext2flt\reqpkt.inc        \
+$(EXT2OS2_BASE)\ext2flt\ext2flt.ddp
+
+DEVICE_SKEL_FILES =                                        \
+$(EXT2OS2_BASE)\skeleton\device\dev32.def                  \
+$(EXT2OS2_BASE)\skeleton\device\dev32.h                    \
+$(EXT2OS2_BASE)\skeleton\device\dev32_banner.c             \
+$(EXT2OS2_BASE)\skeleton\device\dev32_close.c              \
+$(EXT2OS2_BASE)\skeleton\device\dev32_data.c               \
+$(EXT2OS2_BASE)\skeleton\device\dev32_end.asm              \
+$(EXT2OS2_BASE)\skeleton\device\dev32_idc.c                \
+$(EXT2OS2_BASE)\skeleton\device\dev32_init.c               \
+$(EXT2OS2_BASE)\skeleton\device\dev32_init_complete.c      \
+$(EXT2OS2_BASE)\skeleton\device\dev32_invalid_command.c    \
+$(EXT2OS2_BASE)\skeleton\device\dev32_ioctl.c              \
+$(EXT2OS2_BASE)\skeleton\device\dev32_open.c               \
+$(EXT2OS2_BASE)\skeleton\device\dev32_segdef.inc           \
+$(EXT2OS2_BASE)\skeleton\device\dev32_shutdown.c           \
+$(EXT2OS2_BASE)\skeleton\device\dev32_start.asm            \
+$(EXT2OS2_BASE)\skeleton\device\dev32_strategy.c           \
+$(EXT2OS2_BASE)\skeleton\device\dev32.sys     \
+$(EXT2OS2_BASE)\skeleton\device\dev32.sym     \
+$(EXT2OS2_BASE)\skeleton\device\makefile
+
+SES_SKEL_FILES =                                           \
+$(EXT2OS2_BASE)\skeleton\ses\makefile                      \
+$(EXT2OS2_BASE)\skeleton\ses\sec32.sys                     \
+$(EXT2OS2_BASE)\skeleton\ses\sec32.sym                     \
+$(EXT2OS2_BASE)\skeleton\ses\sec32.def                     \
+$(EXT2OS2_BASE)\skeleton\ses\sec32.h                       \
+$(EXT2OS2_BASE)\skeleton\ses\sec32_banner.c                \
+$(EXT2OS2_BASE)\skeleton\ses\sec32_callbacks.c             \
+$(EXT2OS2_BASE)\skeleton\ses\sec32_close.c                 \
+$(EXT2OS2_BASE)\skeleton\ses\sec32_data.c                  \
+$(EXT2OS2_BASE)\skeleton\ses\sec32_end.asm                 \
+$(EXT2OS2_BASE)\skeleton\ses\sec32_idc.c                   \
+$(EXT2OS2_BASE)\skeleton\ses\sec32_init_base.c             \
+$(EXT2OS2_BASE)\skeleton\ses\sec32_init_complete.c         \
+$(EXT2OS2_BASE)\skeleton\ses\sec32_invalid_command.c       \
+$(EXT2OS2_BASE)\skeleton\ses\sec32_ioctl.c                 \
+$(EXT2OS2_BASE)\skeleton\ses\sec32_open.c                  \
+$(EXT2OS2_BASE)\skeleton\ses\sec32_OPEN_POST.c             \
+$(EXT2OS2_BASE)\skeleton\ses\sec32_OPEN_PRE.c              \
+$(EXT2OS2_BASE)\skeleton\ses\sec32_pre_init_base.asm       \
+$(EXT2OS2_BASE)\skeleton\ses\sec32_segdef.inc              \
+$(EXT2OS2_BASE)\skeleton\ses\sec32_shutdown.c              \
+$(EXT2OS2_BASE)\skeleton\ses\sec32_start.asm               \
+$(EXT2OS2_BASE)\skeleton\ses\sec32_strategy.c
+
+#########################################################################################
+!include $(EXT2OS2_BASE)\e2fsprogs-1.10\filelist.os2
+#########################################################################################
+
+MICROFSD_SRC =                            \
+$(EXT2OS2_BASE)\microfsd\boot.asm         \
+$(EXT2OS2_BASE)\microfsd\buffer.c         \
+$(EXT2OS2_BASE)\microfsd\build.c          \
+$(EXT2OS2_BASE)\microfsd\close.c          \
+$(EXT2OS2_BASE)\microfsd\dir.c            \
+$(EXT2OS2_BASE)\microfsd\entry.asm        \
+$(EXT2OS2_BASE)\microfsd\file.c           \
+$(EXT2OS2_BASE)\microfsd\inode.c          \
+$(EXT2OS2_BASE)\microfsd\ll_rwblk.c       \
+$(EXT2OS2_BASE)\microfsd\makefile         \
+$(EXT2OS2_BASE)\microfsd\mfs.h            \
+$(EXT2OS2_BASE)\microfsd\microfsd.h       \
+$(EXT2OS2_BASE)\microfsd\open.c           \
+$(EXT2OS2_BASE)\microfsd\panic.c          \
+$(EXT2OS2_BASE)\microfsd\read.c           \
+$(EXT2OS2_BASE)\microfsd\start.c          \
+$(EXT2OS2_BASE)\microfsd\super.c          \
+$(EXT2OS2_BASE)\microfsd\term.c           \
+$(EXT2OS2_BASE)\microfsd\video.asm        \
+$(EXT2OS2_BASE)\microfsd\vsprintf.c
+
+MINIFSD_SRC =                                            \
+$(EXT2OS2_BASE)\minifsd\devhelp.c                        \
+$(EXT2OS2_BASE)\minifsd\devhelp2.asm                     \
+$(EXT2OS2_BASE)\minifsd\files.c                          \
+$(EXT2OS2_BASE)\minifsd\fs_misc.c                        \
+$(EXT2OS2_BASE)\minifsd\fs_read.c                        \
+$(EXT2OS2_BASE)\minifsd\fs_unsup.c                       \
+$(EXT2OS2_BASE)\minifsd\log.c                            \
+$(EXT2OS2_BASE)\minifsd\makefile                         \
+$(EXT2OS2_BASE)\minifsd\mem.c                            \
+$(EXT2OS2_BASE)\minifsd\mfs.c                            \
+$(EXT2OS2_BASE)\minifsd\minifsd.def                      \
+$(EXT2OS2_BASE)\minifsd\panic.c                          \
+$(EXT2OS2_BASE)\minifsd\volume.c                         \
+$(EXT2OS2_BASE)\minifsd\vsprintf.c                       \
+$(EXT2OS2_BASE)\minifsd\ext2\dir.c                       \
+$(EXT2OS2_BASE)\minifsd\ext2\file.c                      \
+$(EXT2OS2_BASE)\minifsd\ext2\inode.c                     \
+$(EXT2OS2_BASE)\minifsd\ext2\super.c                     \
+$(EXT2OS2_BASE)\minifsd\include\linux\locks.h            \
+$(EXT2OS2_BASE)\minifsd\vfs\buffer.c                     \
+$(EXT2OS2_BASE)\minifsd\vfs\inode.c                      \
+$(EXT2OS2_BASE)\minifsd\vfs\ll_rwblk.c                   \
+$(EXT2OS2_BASE)\minifsd\vfs\sched.c                      \
+$(EXT2OS2_BASE)\minifsd\vfs\super.c
+
+WATCOMSAMPLE_SKEL_FILES =                                \
+$(EXT2OS2_BASE)\skeleton\watcom\watcom.zip
+

@@ -1,0 +1,132 @@
+[$Header: d:\\32bits\\ext2-os2\\doc\\mwdd32\\rcs\\READ.ME,v 1.8 1997/03/15 17:13:14 Willm Exp $]
+ษอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ  32 bits OS/2 device driver and IFS support. Provides 32 bits kernel  บ
+บ  services (DevHelp) and utility functions to 32 bits OS/2 ring 0 code บ
+บ  (device drivers and installable file system drivers).                บ
+บ  Copyright (C) 1995, 1996, 1997  Matthieu WILLM                       บ
+บ                                                                       บ
+บ  This program is free software; you can redistribute it and/or modify บ
+บ  it under the terms of the GNU General Public License as published by บ
+บ  the Free Software Foundation; either version 2 of the License, or    บ
+บ  (at your option) any later version.                                  บ
+บ                                                                       บ
+บ  This program is distributed in the hope that it will be useful,      บ
+บ  but WITHOUT ANY WARRANTY; without even the implied warranty of       บ
+บ  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        บ
+บ  GNU General Public License for more details.                         บ
+บ                                                                       บ
+บ  You should have received a copy of the GNU General Public License    บ
+บ  along with this program; if not, write to the Free Software          บ
+บ  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.            บ
+ศอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+
+                   MWDD32 VERSION 1.70
+
+
+WHAT IS MWDD32  ?
+-----------------
+
+    mwdd32 is a package that allows the implementation of 32 bits OS/2 device drivers
+(BASEDEV and DEVICE) as well as 32 bits Installable File Systems (IFS). It is composed
+of several parts :
+    - a base device driver (mwdd32.sys) that provides kernel services (DevHelp)
+      and utility functions callable from 32 bits ring 0 code.
+    - a static library (fsh32.lib) that provides thunks from 16 bits IFS entry points
+      to 32 bits, and 32 bits interfaces to FSHelper functions. 
+    - a sample 32 bits BASEDEV base device driver skeleton, with sources.
+    - a sample 32 bits DEVICE device driver skeleton, with sources.
+    - a sample 32 bits IFS (Installable File System) driver skeleton, with sources.
+    - a sample 32 bits OS/2 SES (Security Enabling Services) base device driver skeleton, 
+      with sources.
+
+    I created mwdd32 because I started to port my Linux ext2fs IFS to 32 bits
+some times ago, and to do this I had to write 32 bits devhelp interfaces (thunks) and other 
+routines. I thought it would be useful to make other clients than my IFS profit from
+this work. That's why I isolated them in a separate driver and created MWDD32.SYS.
+
+    The 32 bits version of my Linux ext2fs IFS is now available and is a good example of
+a full featured 32 bits IFS, which uses mwdd32.sys services. It can be found at :
+ftp://ftp-os2.nmsu.edu/os2/diskutil/ext2_240.zip
+ftp://sunsite.unc.edu/pub/Linux/system/Filesystems/ext2/ext2_240.zip
+
+    mwdd32 is still work in progress : not all DevHelp are implemented, but only those
+I needed to port ext2-os2 to 32 bits. Suggestions and contributions are welcome
+to help me enhance mwdd32.
+
+COPYRIGHT NOTICE :
+------------------
+
+This package is licensed under terms of the the GNU General Public License. 
+See the file COPYING for details.
+
+If you want to use my own parts (parts that do not contain code from others)
+but not under the GNU General Public License you must contact me and sign an
+agreement with me.
+
+CREDITS :
+---------
+
+Thanks to Holger Veit for the DevHelp calls he added to mwdd32.
+Thanks to Sander van Leeuwen for his Watcom 32 bits PDD sample.
+
+WARNING :
+---------
+
+- MWDD32 IS ONLY USEFUL TO DEVICE DRIVER WRITERS. IT IS *TOTALLY USELESS* FOR 
+  NORMAL USERS. DON'T INSTALL IT IF YOU DON'T PLAN TO WRITE DEVICE DRIVERS !!!
+- FOR THE MOMENT MWDD32 IS EXPERIMENTAL WORK, STILL IN PROGRESS. PROGRAMMING 
+  INTERFACES ARE SUBJECT TO CHANGE. MWDD32.SYS IS PROBABLY STILL UNSTABLE.
+
+SUPPORTED OS/2 VERSIONS :
+-------------------------
+
+- OS/2 WARP V4
+- OS/2 WARP V3 with fixpack 17 or higher
+- OS/2 WARP V3 without any fixpack applied (except for the sample SES driver)
+
+REQUIREMENTS :
+--------------
+
+- IBM VisualAge C++ 3.0 with at least CSD CTC305, the IBM Devcon DDK V2, as well
+  as IBM ALP 4.00.001 are needed to write 32 bits drivers using this package.
+- A file system supporting long file names (eg HPFS for instance) is required.
+
+Note:
+ - The DDK and ALP are now free and can be found at the IBM Online DDK URL :
+   http://service.software.ibm.com/ddk
+ - IBM Visualage C++ P/N is 5622-679 (it is not free !)
+
+INSTALLATION AND USAGE INSTRUCTIONS :
+------------------------------------
+
+  Installing mwdd32.sys :
+     Simply copy it into \os2\boot on your boot drive, and add the following line in
+     your CONFIG.SYS :
+	BASEDEV=MWDD32.SYS
+
+     NOTE : mwdd32.sys is REQUIRED to make all sample drivers work. It must be loaded 
+            before any drivers that use it.
+
+  Sample drivers sources and binaries are located in the file mwdd_src.zip.
+  The programming documentation is in the mwdd32.inf online help file.
+ 
+
+WHERE TO FIND MWDD32 :
+----------------------
+
+ftp://ftp-os2.nmsu.edu/os2/dev32/32drv170.zip
+ftp://ftp.leo.org/os2/drivers/source/32drv170.zip
+ftp://ftp-os2.cdrom.com/pub/os2/dev32/32drv170.zip
+
+DISCLAIMER :
+------------
+
+The fact that I work for IBM has nothing to do with this package : this is
+spare time work. It is ***NOT*** official IBM support for 32 bits OS/2 
+physical device drivers or IFS.
+
+
+Matthieu WILLM
+willm@ibm.net          (home)
+
+

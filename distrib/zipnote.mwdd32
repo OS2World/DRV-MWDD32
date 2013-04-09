@@ -1,0 +1,21 @@
+@ (zip file comment below this line)
+ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+บ 32 bits OS/2 device driver and IFS support. Provides 32 bits kernel  บ
+บ services (DevHelp) and utility functions to 32 bits OS/2 ring 0 code บ
+บ (device drivers and installable file system drivers).                บ
+บ Copyright (C) 1995, 1996, 1997  Matthieu WILLM (willm@ibm.net)       บ
+บ                                                                      บ
+บ This program is free software; you can redistribute it and/or modify บ
+บ it under the terms of the GNU General Public License as published by บ
+บ the Free Software Foundation; either version 2 of the License, or    บ
+บ (at your option) any later version.                                  บ
+บ                                                                      บ
+บ This program is distributed in the hope that it will be useful,      บ
+บ but WITHOUT ANY WARRANTY; without even the implied warranty of       บ
+บ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        บ
+บ GNU General Public License for more details.                         บ
+บ                                                                      บ
+บ You should have received a copy of the GNU General Public License    บ
+บ along with this program; if not, write to the Free Software          บ
+บ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.            บ
+ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ

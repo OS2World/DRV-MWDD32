@@ -1,0 +1,1243 @@
+.*
+.* $Header: d:\\32bits\\ext2-os2\\doc\\mwdd32\\rcs\\devhlp32.im,v 1.5 1997/03/15 17:13:14 Willm Exp $
+.*
+
+.* 32 bits OS/2 device driver and IFS support. Provides 32 bits kernel 
+.* services (DevHelp) and utility functions to 32 bits OS/2 ring 0 code 
+.* (device drivers and installable file system drivers).
+.* Copyright (C) 1995, 1996, 1997  Matthieu WILLM (willm@ibm.net)
+.*
+.* This program is free software; you can redistribute it and/or modify
+.* it under the terms of the GNU General Public License as published by
+.* the Free Software Foundation; either version 2 of the License, or
+.* (at your option) any later version.
+.*
+.* This program is distributed in the hope that it will be useful,
+.* but WITHOUT ANY WARRANTY; without even the implied warranty of
+.* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.* GNU General Public License for more details.
+.*
+.* You should have received a copy of the GNU General Public License
+.* along with this program; if not, write to the Free Software
+.* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+.nameit symbol=titre_900 text='The DEVHLP32 interface'
+.nameit symbol=titre_901 text='DevHlp32_VMLock'
+.nameit symbol=titre_902 text='DevHlp32_VMUnlock'
+.nameit symbol=titre_903 text='DevHlp32_ProcBlock'
+.nameit symbol=titre_904 text='DevHlp32_ProcRun'
+.nameit symbol=titre_905 text='DevHlp32_VMAlloc'
+.nameit symbol=titre_906 text='DevHlp32_VMFree'
+.nameit symbol=titre_907 text='DevHlp32_VirtToLin'
+.nameit symbol=titre_908 text='DevHlp32_InternalError'
+.nameit symbol=titre_909 text='DevHlp32_SaveMessage'
+.nameit symbol=titre_910 text='DevHlp32_LinToPageList'
+.nameit symbol=titre_911 text='DevHlp32_Yield'
+.nameit symbol=titre_912 text='DevHlp32_GetInfoSegs'
+.nameit symbol=titre_913 text='DevHlp32_setIRQ'
+.nameit symbol=titre_914 text='DevHlp32_UnSetIRQ'
+.nameit symbol=titre_915 text='DevHlp32_EOI'
+.nameit symbol=titre_916 text='DevHlp32_PageListToLin'
+.nameit symbol=titre_917 text='DevHlp32_AllocGDTSelector'
+.nameit symbol=titre_918 text='DevHlp32_FreeGDTSelector'
+.nameit symbol=titre_919 text='DevHlp32_AttachDD'
+.nameit symbol=titre_920 text='DevHlp32_GetDosVar'
+.nameit symbol=titre_921 text='DevHlp32_OpenEventSem'
+.nameit symbol=titre_922 text='DevHlp32_CloseEventSem'
+.nameit symbol=titre_923 text='DevHlp32_ResetEventSem'
+.nameit symbol=titre_924 text='DevHlp32_PostEventSem'
+.nameit symbol=titre_925 text='DevHlp32_VerifyAccess'
+
+:h1.&titre_900.
+
+This chapter describes the 32 bits DevHelp interfaces provided by mwdd32.sys.
+To use them from C code, you must include the following files &colon.
+:ul compact.
+:li.os2/types.h
+:li.os2/devhlp32.h
+:eul.
+:p.
+This document is only intented to describe the 32 bits version of the DevHelp calls,
+it does NOT replace the DDK's :hp1.Physical Device Driver Reference:ehp1.. Please refer
+to that document for a more complete description of the DevHelp calls.
+
+:nt.
+:ul compact.
+:li.Unless otherwise specified, ALL pointers are 32 bits FLAT pointers.
+:li.Unless ohterwise specified, ALL DevHlp32 routines follow the 32 bits SYSTEM calling convention (parameters pushed from right to left, caller cleans up the stack, EBP ESI EDI EBX and all segment registers are preserved, other are not)
+:eul.
+:ent.
+
+:p.
+List of DevHlp32 routines &colon.
+:ul compact.
+:li.:link reftype=hd refid=901.&titre_901.:elink.
+:li.:link reftype=hd refid=902.&titre_902.:elink.
+:li.:link reftype=hd refid=903.&titre_903.:elink.
+:li.:link reftype=hd refid=904.&titre_904.:elink.
+:li.:link reftype=hd refid=905.&titre_905.:elink.
+:li.:link reftype=hd refid=906.&titre_906.:elink.
+:li.:link reftype=hd refid=907.&titre_907.:elink.
+:li.:link reftype=hd refid=908.&titre_908.:elink.
+:li.:link reftype=hd refid=909.&titre_909.:elink.
+:li.:link reftype=hd refid=910.&titre_910.:elink.
+:li.:link reftype=hd refid=911.&titre_911.:elink.
+:li.:link reftype=hd refid=912.&titre_912.:elink.
+:li.:link reftype=hd refid=913.&titre_913.:elink.
+:li.:link reftype=hd refid=914.&titre_914.:elink.
+:li.:link reftype=hd refid=915.&titre_915.:elink.
+:li.:link reftype=hd refid=916.&titre_916.:elink.
+:li.:link reftype=hd refid=917.&titre_917.:elink.
+:li.:link reftype=hd refid=918.&titre_918.:elink.
+:li.:link reftype=hd refid=919.&titre_919.:elink.
+:li.:link reftype=hd refid=920.&titre_920.:elink.
+:li.:link reftype=hd refid=921.&titre_921.:elink.
+:li.:link reftype=hd refid=922.&titre_922.:elink.
+:li.:link reftype=hd refid=923.&titre_923.:elink.
+:li.:link reftype=hd refid=924.&titre_924.:elink.
+:li.:link reftype=hd refid=925.&titre_925.:elink.
+:eul.
+
+.*******************************************************************************
+.*** DevHlp32_VMLock                                                         ***
+.*******************************************************************************
+
+:h2 id=901.&titre_901.
+
+:p.
+Locks a memory region in physical memory
+
+:xmp.
+int DH32ENTRY DevHlp32_VMLock(                                                             
+            unsigned long   flags,
+            void           *addr,
+            unsigned long   length,
+            void           *pPageList,
+            void           *pLockHandle,
+            unsigned long *pPageListCount
+           );                                                            
+:exmp.
+
+:p.Execution context &colon.
+
+:table cols='10 10' frame=box rules=both.
+:row.
+:c.  Task
+:c.Interrupt
+:row.
+:c.   Yes
+:c.   No
+:etable.
+
+:p.Parameters description &colon.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.unsigned long flags
+:c.input
+:c.DevHlp_VMAlloc flags (cf Physical Device Driver Reference).
+:row.
+:c.void *addr
+:c.input
+:c.Address of the region to lock.
+:row.
+:c.unsigned long length
+:c.input
+:c.length of region to lock.
+:row.
+:c.void *pPageList
+:c.in/out
+:c.Pointer to a location where VMLock will store the list of locked pages. Can be 0.
+:row.
+:c.void *lock
+:c.in/out
+:c.Pointer to a 12 bytes region to store the lock handle.
+:row.
+:c.unsigned long *pPageListCount
+:c.in/out
+:c.Pointer to an unsigned long integer where VMLock will place the count of pages locked. MUST be a valid pointer.
+:etable.
+
+.*******************************************************************************
+.*** DevHlp32_VMUnlock                                                       ***
+.*******************************************************************************
+
+:h2 id=902.&titre_902.
+
+:p.
+Unlocks a memory region locked by DevHlp32_VMLock
+
+:xmp.
+int DH32ENTRY DevHlp32_VMUnlock(
+                                void *pLockHandle
+                               );
+:exmp.
+
+:p.Execution context &colon.
+
+:table cols='10 10' frame=box rules=both.
+:row.
+:c.  Task
+:c.Interrupt
+:row.
+:c.   Yes
+:c.   No
+:etable.
+
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.void *pLockHandle
+:c.input
+:c.Pointer to the 12 bytes lock handle filled in by DevHlp32_VMLock.
+:etable.
+
+.*******************************************************************************
+.*** DevHlp32_ProcBlock                                                      ***
+.*******************************************************************************
+
+:h2 id=903.&titre_903.
+
+:p.
+Blocks the current thread.
+
+:xmp.
+int DH32ENTRY DevHlp32_ProcBlock(
+                                 unsigned long  eventid,
+                                 long           timeout,
+                                 short          interruptible
+                                );
+:exmp.
+
+:p.Execution context &colon.
+
+:table cols='10 10' frame=box rules=both.
+:row.
+:c.  Task
+:c.Interrupt
+:row.
+:c.   Yes
+:c.   No
+:etable.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.unsigned long eventid
+:c.input
+:c.Arbitrary value used by the OS/2 kernel as a block ID.
+:row.
+:c.long timeout
+:c.input
+:c.Duration of blocking.
+:row.
+:c.short interruptible
+:c.input
+:c.Whether the blocking is interruptible by CTRL+C or not.
+:etable.
+
+.*******************************************************************************
+.*** DevHlp32_ProcRun                                                        ***
+.*******************************************************************************
+
+:h2 id=904.&titre_904.
+
+:p.
+Puts all threads blocked on a particular event in the READY state.
+
+:xmp.
+int DH32ENTRY DevHlp32_ProcRun(
+                               unsigned long eventid
+                              );
+:exmp.
+
+:p.Execution context &colon.
+
+:table cols='10 10' frame=box rules=both.
+:row.
+:c.  Task
+:c.Interrupt
+:row.
+:c.   Yes
+:c.   Yes
+:etable.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.unsigned long eventid
+:c.input
+:c.Same value as passed to DevHlp32_ProckBlock.
+:etable.
+
+
+
+.*******************************************************************************
+.*** DevHlp32_VMAlloc                                                        ***
+.*******************************************************************************
+
+:h2 id=905.&titre_905.
+
+:p.
+Page granular memory allocation.
+
+
+:xmp.
+int DH32ENTRY DevHlp32_VMAlloc(
+                               unsigned long  Length,
+                               unsigned long  PhysAddr,
+                               unsigned long  Flags,
+                               void         **LinAddr
+                              );
+:exmp.
+
+:p.Execution context &colon.
+
+:table cols='10 10' frame=box rules=both.
+:row.
+:c.  Task
+:c.Interrupt
+:row.
+:c.   Yes
+:c.   No
+:etable.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.unsigned long Length
+:c.input
+:c.Size of memory block to allocate.
+:row.
+:c.unsigned long PhysAddr
+:c.input
+:c.Physical address of region to map (if any), -1 otherwise.
+:row.
+:c.unsigned long Flags
+:c.input
+:c.Allocation flags (cf Physical Device Driver Reference)
+:row.
+:c.void **LinAddr
+:c.in/out
+:c.Pointer to a void * where VMAlloc will store the pointer to the allocated block of memory.
+:etable.
+
+
+.*******************************************************************************
+.*** DevHlp32_VMFree                                                         ***
+.*******************************************************************************
+
+
+:h2 id=906.&titre_906.
+
+:p.
+Frees memory previously allocated with DevHlp32_VMAlloc.
+
+
+:xmp.
+int _Optlink DevHlp32_VMFree(
+                             void *addr        /* eax */
+                            );
+:exmp.
+
+:p.Execution context &colon.
+
+:table cols='10 10' frame=box rules=both.
+:row.
+:c.  Task
+:c.Interrupt
+:row.
+:c.   Yes
+:c.   No
+:etable.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.void *addr
+:c.input
+:c.Pointer to the memory block to free.
+:etable.
+
+.*******************************************************************************
+.*** DevHlp32_VirtToLin                                                      ***
+.*******************************************************************************
+
+
+:h2 id=907.&titre_907.
+
+:p.
+Converts a virtual 16&colon.16 address to a FLAT 0&colon.32 address.
+
+
+:xmp.
+int DH32ENTRY DevHlp32_VirtToLin(
+                                 PTR16  virt, 
+                                 void **plin
+                                );
+:exmp.
+
+:p.Execution context &colon.
+
+:table cols='10 10' frame=box rules=both.
+:row.
+:c.  Task
+:c.Interrupt
+:row.
+:c.   Yes
+:c.   Yes
+:etable.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.PTR16 virt
+:c.input
+:c.Virtual 16&colon.16 address to convert.
+:row.
+:c.void **plin
+:c.in/out
+:c.Pointer to a void * where VirtToLin will store the returned 0&colon.32 address.
+:etable.
+
+.*******************************************************************************
+.*** DevHlp32_InternalError                                                  ***
+.*******************************************************************************
+
+
+:h2 id=908.&titre_908.
+
+:p.
+Initiates the kernel panic procedure (abrupt system halt).
+
+
+:xmp.
+void DH32ENTRY DevHlp32_InternalError(
+                                      char *msg,
+                                      int   len
+                                     );
+:exmp.
+
+:p.Execution context &colon.
+
+:table cols='10 10' frame=box rules=both.
+:row.
+:c.  Task
+:c.Interrupt
+:row.
+:c.   Yes
+:c.   No
+:etable.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.char *msg
+:c.input
+:c.Error message to display on the kernel trap screen.
+:row.
+:c.int len
+:c.input
+:c.Message length, including terminating \0.
+:etable.
+
+
+
+.*******************************************************************************
+.*** DevHlp32_SaveMessage                                                    ***
+.*******************************************************************************
+
+:h2 id=909.&titre_909.
+
+:p.
+Displays a message on the screen at bootup.
+
+
+:xmp.
+int DH32ENTRY DevHlp32_SaveMessage(
+                                   char *msg,
+                                   int   len
+                                  );
+:exmp.
+
+:p.Execution context &colon.
+Can be called from 32 bits ring 0 code as long as the OS/2 boot procedure is not finished.
+:ul compact.
+:li.for a BASEDEV, it can be called during 32 bits ring 0 INIT time (drv32_init_base() in the sample skeleton).
+:li.for an IFS, it can be called during 32 bits ring 0 INIT time (fs32_init() in the sample skeleton).
+:eul.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.char *msg
+:c.input
+:c.Message to display on the screen.
+:row.
+:c.int len
+:c.input
+:c.Message length, including terminating \0.
+:etable.
+
+
+
+
+.*******************************************************************************
+.*** DevHlp32_LinToPageList                                                  ***
+.*******************************************************************************
+
+:h2 id=910.&titre_910.
+
+:p.
+Returns the page list mapping a given memory region.
+
+
+:xmp.
+int DH32ENTRY DevHlp32_LinToPageList(
+                                     void            *lin,
+                                     unsigned long    size,
+                                     struct PageList *pages,
+                                     unsigned long   *nr_pages
+                                    );
+:exmp.
+
+:p.Execution context &colon.
+
+:table cols='10 10' frame=box rules=both.
+:row.
+:c.  Task
+:c.Interrupt
+:row.
+:c.   Yes
+:c.   No
+:etable.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.void *lin
+:c.input
+:c.Address of memory region to map.
+:row.
+:c.unsigned long size
+:c.input
+:c.Size of memory region to map.
+:row.
+:c.struct PageList *pages
+:c.in/out
+:c.Pointer to a PageList structure array where LiToPageLin will store the page information. It must be large enough.
+:row.
+:c.unsigned long *nr_pages
+:c.in/out
+:c.Pointer to an unsigned integer where LinToPageList will store the number of pages returned.
+:etable.
+
+
+
+
+.*******************************************************************************
+.*** DevHlp32_Yield                                                          ***
+.*******************************************************************************
+
+
+:h2 id=911.&titre_911.
+
+:p.
+Gives up the CPU and let higher priority threads to run.
+
+
+:xmp.
+void DH32ENTRY DevHlp32_Yield(void);
+:exmp.
+
+:p.Execution context &colon.
+
+:table cols='10 10' frame=box rules=both.
+:row.
+:c.  Task
+:c.Interrupt
+:row.
+:c.   Yes
+:c.   No
+:etable.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:etable.
+
+.*******************************************************************************
+.*** DevHlp32_GetInfoSegs                                                    ***
+.*******************************************************************************
+
+:h2 id=912.&titre_912.
+
+:p.
+Retrieves FLAT pointers to the Global and Local information segments.
+
+:nt.
+This call has no 16 bits DevHelp equivalent. It has a more simpler and faster implementation
+that calling DevHlp_GetDOSVar and thunking the result &colon. it directly retrieves values from the System Anchor Segment.
+:ent.
+
+:xmp.
+int DH32ENTRY DevHlp32_GetInfoSegs(
+                                   struct InfoSegGDT **ppSysInfoSeg,  /* ebp + 8  */
+                                   struct InfoSegLDT **ppLocInfoSeg   /* ebp + 12 */
+                                  );
+:exmp.
+
+:p.Execution context &colon.
+
+:table cols='10 10' frame=box rules=both.
+:row.
+:c.  Task
+:c.Interrupt
+:row.
+:c.   Yes
+:c.   No
+:etable.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.struct InfoSegGDT **ppSysInfoSeg
+:c.in/out
+:c.Pointer to a double word where will be stored the global information segment linear address.
+:row.
+:c.struct InfoSegLDT **ppLocInfoSeg
+:c.in/out
+:c.Pointer to a double word where will be stored the local information segment linear address.
+:etable.
+
+
+
+.*******************************************************************************
+.*** DevHlp32_setIRQ                                                         ***
+.*******************************************************************************
+
+:h2 id=913.&titre_913.
+
+:p.
+Sets a hardware interrupt vector.
+
+
+:xmp.
+int DH32ENTRY DevHlp32_setIRQ(
+                              unsigned short offset_irq,        /* ebp + 8  */
+                              unsigned short interrupt_level,   /* ebp + 12 */
+                              unsigned short sharing_flag,      /* ebp + 16 */
+                              unsigned short data16_segment     /* ebp + 20 */
+                             );
+:exmp.
+
+:p.Execution context &colon.
+
+:table cols='10 10' frame=box rules=both.
+:row.
+:c.  Task
+:c.Interrupt
+:row.
+:c.   Yes
+:c.   No
+:etable.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.unsigned short offset_irq
+:c.input
+:c.offset to the 16&colon.16 interrupt service routine (see note below).
+:row.
+:c.unsigned short interrupt_level
+:c.input
+:c.hardware interrupt to be serviced.
+:row.
+:c.unsigned short sharing_flag
+:c.input
+:c.whether the IRQ is to be shared or not.
+:row.
+:c.unsigned short data16_segment
+:c.input
+:c.selector of the device driver 16 bits data segment (the one containing the device header).
+:etable.
+
+:nt.
+The Interrupt handler set by DevHlp32_setIRQ must be a 16&colon.16 entry point. To implement
+a 32 bits interrupt handler, simply make a small 16&colon.16 stub that does a far call to the
+32 bits handler. You can find an example in ./skeleton/basedev &colon.
+:sl compact.
+:li.drv32_stub_irq.asm contains the 16&colon.16 stub
+:li.drv32_irq.c contains the 32 bits interrupt handler
+:li.drv32_init_base.c contains the call to DevHlp32_setIRQ
+:esl.
+:ent.
+
+
+.*******************************************************************************
+.*** DevHlp32_UnSetIRQ                                                       ***
+.*******************************************************************************
+
+:h2 id=914.&titre_914.
+
+:p.
+Frees a hardware interrupt vector.
+
+
+:xmp.
+int DH32ENTRY DevHlp32_UnSetIRQ(
+                                unsigned short interrupt_level,   /* ebp + 8  */
+                                unsigned short data16_segment     /* ebp + 12 */
+                               );
+:exmp.
+
+:p.Execution context &colon.
+
+:table cols='10 10' frame=box rules=both.
+:row.
+:c.  Task
+:c.Interrupt
+:row.
+:c.   Yes
+:c.   Yes
+:etable.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.unsigned short interrupt_level
+:c.input
+:c.hardware interrupt to be serviced.
+:row.
+:c.unsigned short data16_segment
+:c.input
+:c.selector of the device driver 16 bits data segment (the one containing the device header).
+:etable.
+
+
+
+.*******************************************************************************
+.*** DevHlp32_EOI                                                            ***
+.*******************************************************************************
+
+:h2 id=915.&titre_915.
+
+:p.
+Sends EOI to the interrupt controller.
+
+:nt.
+This routine has _Optlink linkage for performance reasons.
+:ent.
+
+:xmp.
+int DH32ENTRY2 DevHlp32_EOI(
+                            unsigned short interrupt_level   /* ax */
+                           );
+:exmp.
+
+:p.Execution context &colon.
+
+:table cols='10 10' frame=box rules=both.
+:row.
+:c.  Task
+:c.Interrupt
+:row.
+:c.   No
+:c.   Yes
+:etable.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.unsigned short interrupt_level
+:c.input
+:c.hardware interrupt to be serviced.
+:etable.
+
+
+.*******************************************************************************
+.*** DevHlp32_PageListToLin                                                  ***
+.*******************************************************************************
+
+:h2 id=916.&titre_916.
+
+:p.
+Maps physical pages to a linear address.
+
+
+:xmp.
+int DH32ENTRY DevHlp32_PageListToLin(
+                                     unsigned long     size,        /* ebp + 8  */
+                                     struct PageList  *pPageList,   /* ebp + 12 */
+                                     void            **pLin         /* ebp + 16 */
+                                    );
+:exmp.
+
+:p.Execution context &colon.
+
+:table cols='10 10' frame=box rules=both.
+:row.
+:c.  Task
+:c.Interrupt
+:row.
+:c.   Yes
+:c.   Yes
+:etable.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.unsigned long size
+:c.input
+:c.Count of bytes to be mapped (it must not exceed 64 Kb)
+:row.
+:c.struct PageList *pPageList
+:c.input
+:c.List of pages to be mapped
+:row.
+:c.void **pLin
+:c.in/out
+:c.Pointer to a void * where PageListToLin will store the linear address obtained.
+:etable.
+
+.*******************************************************************************
+.*** DevHlp32_AllocGDTSelector                                               ***
+.*******************************************************************************
+
+:h2 id=917.&titre_917.
+
+:p.
+Allocates a set of GDT selectors.
+
+
+:xmp.
+int DH32ENTRY DevHlp32_AllocGDTSelector(
+                                        unsigned short *psel, 
+                                        int count
+                                       );
+:exmp.
+
+:p.Execution context &colon.
+
+:table cols='10 10' frame=box rules=both.
+:row.
+:c.  Task
+:c.Interrupt
+:row.
+:c.   Yes
+:c.   No
+:etable.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.unsigned short *psel
+:c.in/out
+:c.Pointer to an array of unsigned short where AllocGDTSelector will put the allocated selector values.
+:row.
+:c.int count
+:c.input
+:c.Number of GDT selectors to be allocated
+:etable.
+
+.*******************************************************************************
+.*** DevHlp32_FreeGDTSelector                                                ***
+.*******************************************************************************
+
+:h2 id=918.&titre_918.
+
+:p.
+Frees a GDT selector previously allocated with DevHlp32_AllocGDTSelector.
+
+
+:xmp.
+int DH32ENTRY2 DevHlp32_FreeGDTSelector(
+                                         unsigned short sel     /* ax */
+                                       );
+:exmp.
+
+:nt.
+This routine has _Optlink linkage.
+:ent.
+
+:p.Execution context &colon.
+
+:table cols='10 10' frame=box rules=both.
+:row.
+:c.  Task
+:c.Interrupt
+:row.
+:c.   Yes
+:c.   No
+:etable.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.unsigned short sel
+:c.input
+:c.GDT selector to be freed.
+:etable.
+
+.*******************************************************************************
+.*** DevHlp32_AttachDD                                                       ***
+.*******************************************************************************
+
+:h2 id=919.&titre_919.
+
+:p.
+Retrieves another device driver's IDC entry point.
+
+
+:xmp.
+int DH32ENTRY DevHlp32_AttachDD(
+                                char *ddname,            /* ebp + 8  */
+                                struct ddtable *table    /* ebp + 12 */
+                               );
+:exmp.
+
+
+:p.Execution context &colon.
+
+:table cols='10 10' frame=box rules=both.
+:row.
+:c.  Task
+:c.Interrupt
+:row.
+:c.   Yes
+:c.   No
+:etable.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.char *ddname
+:c.input
+:c.Name of device driver. Must be less that 9 characters including trailing NULL.
+:row.
+:c.struct ddtable *table
+:c.in/out
+:c.Pointer to a structure where AttachDD will put the IDC entry point information.
+:etable.
+
+:warning.
+The name must match EXACTLY the name of the driver present in its header, INCLUDING trailing spaces if any.
+:ewarning.
+
+.*******************************************************************************
+.*** DevHlp32_GetDosVar                                                      ***
+.*******************************************************************************
+
+:h2 id=920.&titre_920.
+
+:p.
+Gets the address of a kernel variable.
+
+
+:xmp.
+extern int DH32ENTRY DevHlp32_GetDosVar(
+                                        int     index,      /* ebp + 8  */
+                                        PTR16  *value,      /* ebp + 12 */
+                                        int     member      /* ebp + 16 */
+                                       );
+:exmp.
+
+
+:p.Execution context &colon.
+
+:table cols='10 10' frame=box rules=both.
+:row.
+:c.  Task
+:c.Interrupt
+:row.
+:c.   Yes
+:c.   No
+:etable.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.int index
+:c.input
+:c.Index of the variable to be retrieved.
+:row.
+:c. PTR16 *value
+:c.in/out
+:c.Pointer to a PTR16 where GetDosVar will put the address of the kernel variable.
+:row.
+:c.int member
+:c.input
+:c.Member to be retrieved for index 14 and 16, 0 otherwise.
+:etable.
+
+.*******************************************************************************
+.*** DevHlp32_OpenEventSem                                                   ***
+.*******************************************************************************
+
+:h2 id=921.&titre_921.
+
+:p.
+Opens a 32 bits shared event semaphore.
+
+
+:xmp.
+int DH32ENTRY DevHlp32_OpenEventSem(
+                                    unsigned long handle        /* ebp + 8  */
+                                   );
+:exmp.
+
+
+:p.Execution context &colon.
+
+:table cols='10 10' frame=box rules=both.
+:row.
+:c.  Task
+:c.Interrupt
+:row.
+:c.   Yes
+:c.   No
+:etable.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.unsigned long handle
+:c.input
+:c.handle of the 32 bits semaphore to be opened.
+:etable.
+
+.*******************************************************************************
+.*** DevHlp32_CloseEventSem                                                  ***
+.*******************************************************************************
+
+:h2 id=922.&titre_922.
+
+:p.
+Closes a 32 bits shared event semaphore.
+
+
+:xmp.
+int DH32ENTRY DevHlp32_CloseEventSem(
+                                     unsigned long handle        /* ebp + 8  */
+                                    );
+:exmp.
+
+
+:p.Execution context &colon.
+
+:table cols='10 10' frame=box rules=both.
+:row.
+:c.  Task
+:c.Interrupt
+:row.
+:c.   Yes
+:c.   No
+:etable.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.unsigned long handle
+:c.input
+:c.handle of the 32 bits semaphore to be closed.
+:etable.
+
+.*******************************************************************************
+.*** DevHlp32_ResetEventSem                                                  ***
+.*******************************************************************************
+
+:h2 id=923.&titre_923.
+
+:p.
+Resets a 32 bits shared event semaphore.
+
+
+:xmp.
+int DH32ENTRY DevHlp32_ResetEventSem(
+                                     unsigned long handle,       /* ebp + 8  */
+                                     int *nposts                 /* ebp + 12 */
+                                    );
+:exmp.
+
+
+:p.Execution context &colon.
+
+:table cols='10 10' frame=box rules=both.
+:row.
+:c.  Task
+:c.Interrupt
+:row.
+:c.   Yes
+:c.   No
+:etable.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.unsigned long handle
+:c.input
+:c.handle of the 32 bits semaphore to be reset.
+:row.
+:c.int *nposts
+:c.in/out
+:c.pointer to an integer where ResetEventSem will store the semaphore post count before reset.
+:etable.
+
+.*******************************************************************************
+.*** DevHlp32_PostEventSem                                                   ***
+.*******************************************************************************
+
+:h2 id=924.&titre_924.
+
+:p.
+Posts a 32 bits shared event semaphore.
+
+
+:xmp.
+int DH32ENTRY DevHlp32_PostEventSem(
+                                    unsigned long handle          /* ebp + 8  */
+                                   );
+:exmp.
+
+
+:p.Execution context &colon.
+
+:table cols='10 10' frame=box rules=both.
+:row.
+:c.  Task
+:c.Interrupt
+:row.
+:c.   Yes
+:c.   No
+:etable.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.unsigned long handle
+:c.input
+:c.handle of the 32 bits semaphore to be posted.
+:etable.
+
+.*******************************************************************************
+.*** DevHlp32_VerifyAccess                                                   ***
+.*******************************************************************************
+
+:h2 id=925.&titre_925.
+
+:p.
+Performs access control on a 16&colon.16 pointer.
+
+
+:xmp.
+int DH32ENTRY DevHlp32_VerifyAccess(
+                                    PTR16 address,              /* ebp + 8 */
+                                    unsigned short size,        /* ebp + 12 */	
+                                    int flags                   /* ebp + 16  */
+                                   );
+:exmp.
+
+
+:p.Execution context &colon.
+
+:table cols='10 10' frame=box rules=both.
+:row.
+:c.  Task
+:c.Interrupt
+:row.
+:c.   Yes
+:c.   No
+:etable.
+
+:table cols='20 10 45' frame=box rules=both.
+:row.
+:c.Parameter type
+:c.Input Output
+:c.Description
+:row.
+:c.PTR16 address
+:c.input
+:c.16&colon.16 address to be verified.
+:row.
+:c.unsigned short size
+:c.input
+:c.size of the aera to be verified.
+:row.
+:c.int flags
+:c.input
+:c.type of access control to perform (readonly/readwrite)
+:etable.
+
